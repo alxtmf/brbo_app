@@ -1,0 +1,28 @@
+{
+  "name": "broker_bot",
+  "version": "0.0.1",
+  "description": "Broker bot for Telegram, Viber messengers",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "serve": "nodemon src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "graphql": "^14.0.2",
+    "graphql-request": "^3.0.0",
+    "node-cron": "^2.0.3",
+    "node-fetch": "^2.6.0",
+    "pg": "^8.3.0",
+    "postgraphile": "^4.7.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  }
+}
