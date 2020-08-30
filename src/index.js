@@ -3,7 +3,7 @@ const cors = require('cors')
 const express = require('express')
 const bodyParser = require('body-parser')
 const postgraphile = require('./postgraphile')
-const logger = require('./log')
+const { logger }= require('./log')
 const messageRouter = require("./routes/messageRouter")
 
 const app = express()
@@ -20,4 +20,4 @@ app.use(function (req, res, next) {
     res.status(404).send("Not Found")
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+app.listen(PORT, () => logger.info(`Server running on port ${PORT}`))

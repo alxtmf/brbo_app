@@ -1,5 +1,5 @@
 const uuid = require('uuid');
-const {logger} = require("../log");
+const {logger } = require("../log");
 const {GraphQLClient, gql} = require('graphql-request')
 const endpoint = `http://localhost:${process.env.PORT}/graphql`
 const graphQLClient = new GraphQLClient(endpoint )//, {
@@ -19,7 +19,7 @@ curl --location --request POST 'localhost:3000/message/send' \
 
 async function saveMessage(message){
     try {
-        console.log(`message:` + message);
+        //console.log(`message:` + message);
 
         const data = await graphQLClient.request(gql`
                     mutation {
@@ -44,6 +44,51 @@ async function saveMessage(message){
     }
 }
 
+async function findIncomRequest(idIncomRequest){
+    const data = await graphQLClient.request(gql`
+        {
+            allRegIncomRequests(condition: {uuid: "${idIncomRequest}", status: 1}) {
+                nodes {
+                    uuid
+                }
+            }
+        }
+    `)
+/*
+{
+  "data": {
+    "allRegIncomRequests": {
+      "nodes": []
+    }
+  }
+}
+*/
+    return data.allRegIncomRequests.nodes.length
+}
+
+async function saveIncomRequest(idIncomRequest){
+    try {
+        const isFindIncom = await findIncomRequest(idIncomRequest)
+
+        if (isFindIncom) {
+            const data = await graphQLClient.request(gql`
+                mutation {
+                    __typename
+                    updateRegIncomRequestByUuid(input: {regIncomRequestPatch: {status: 2}, uuid: "${idIncomRequest}"}) {
+                        clientMutationId
+                    }
+                }
+                `
+            )
+            return Promise.resolve({error: '', data: data})
+        } else {
+            throw "not found incom"
+        }
+    }catch (e) {
+        return Promise.reject({error: e, data: null})
+    }
+}
+
 module.exports.sendMessage = function(request, response){
     if(!request.body) return response.sendStatus(400);
 
@@ -51,7 +96,7 @@ module.exports.sendMessage = function(request, response){
 
     const promises = messages.map(async (message) => {
         try {
-            console.log(`message:` + message);
+            //console.log(`message:` + message);
 
             const data = await graphQLClient.request(gql`
                 {
@@ -72,7 +117,7 @@ module.exports.sendMessage = function(request, response){
                     }
                 }
             `)
-            console.log("result: " + JSON.stringify(data));
+//            console.log("result: " + JSON.stringify(data));
 /*
 {
   "data": {
@@ -105,7 +150,17 @@ module.exports.sendMessage = function(request, response){
                 message.idEventType = data.allClsEventTypes.nodes[0].uuid
                 message.idTargetSystem = data.allClsEventTypes.nodes[0].idTargetSystem
                 message.idUser = data.allClsEventTypes.nodes[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges[0].node.idUser
-                console.log(message)
+
+                //if message.id_incom_request not null
+                if(message.id_incom_request){
+                    await saveIncomRequest(message.id_incom_request)
+                        .then(()=> {
+                            logger.info('message.id_incom_request (' + message.id_incom_request + ') status is set=2')
+                        })
+                        .catch(()=> {
+                            logger.error('message.id_incom_request (' + message.id_incom_request + ') error set status')
+                        })
+                }
 
                 await saveMessage(message)
                     .then((result)=> {
@@ -114,9 +169,10 @@ module.exports.sendMessage = function(request, response){
                     .catch((result)=> {
                         return {message: message, result: result.error}
                     })
+
             }
         }catch (e) {
-            console.log(JSON.stringify(e))
+            //console.log(JSON.stringify(e))
             return {message: message, result: "error"}
         }
     })

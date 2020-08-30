@@ -9,8 +9,7 @@ const logformat = winston.format.combine(
 const infoLogFilename = 'logs/info.log'
 const errorLogFilename = 'logs/error.log'
 
-const logger = {
-    log: winston.createLogger({
+module.exports.logger = winston.createLogger({
         level: 'info',
         format: logformat,
         transports: [
@@ -33,9 +32,8 @@ const logger = {
             })
         ],
     })
-};
 
 module.exports.errorLogFilename = errorLogFilename
 module.exports.infoLogFilename = infoLogFilename
-module.exports.logger = logger
+
 
