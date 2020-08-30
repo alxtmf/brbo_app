@@ -19,6 +19,7 @@
     "node-fetch": "^2.6.0",
     "pg": "^8.3.0",
     "postgraphile": "^4.7.0",
+    "uuid": "^8.3.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
