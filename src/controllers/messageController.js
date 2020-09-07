@@ -38,9 +38,9 @@ async function saveMessage(message){
 
             `
             )
-        return Promise.resolve({ error: '', data: data})
+        return message // Promise.resolve({ error: '', data: data})
     } catch(e){
-        return Promise.reject({ error: e, data: null })
+        return e //Promise.reject({ error: e, data: null })
     }
 }
 
@@ -145,7 +145,7 @@ module.exports.sendMessage = function(request, response){
 */
 
             if(data.allClsEventTypes.nodes[0].uuid == "" && data.allClsEventTypes.nodes[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0){
-                return {message: message, result: "event_type not found"}
+                return message //{message: message, result: "event_type not found"}
             } else{
                 message.idEventType = data.allClsEventTypes.nodes[0].uuid
                 message.idTargetSystem = data.allClsEventTypes.nodes[0].idTargetSystem
@@ -162,22 +162,17 @@ module.exports.sendMessage = function(request, response){
                         })
                 }
 
-                await saveMessage(message)
-                    .then((result)=> {
-                        return {message: message, result: "save message ok"}
-                    })
-                    .catch((result)=> {
-                        return {message: message, result: result.error}
-                    })
+                return await saveMessage(message)
 
             }
         }catch (e) {
-            //console.log(JSON.stringify(e))
-            return {message: message, result: "error"}
+            throw message
         }
     })
 
-    Promise.all(promises).then((result)=>{ response.send(result) })
+    Promise.allSettled(promises).then((result) => {
+        response.send(result)
+    })
 };
 
 
