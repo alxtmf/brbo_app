@@ -19,8 +19,7 @@ curl --location --request POST 'localhost:3000/message/send' \
 
 async function saveMessage(message){
     try {
-        //console.log(`message:` + message);
-
+        //TODO save attachments
         const data = await graphQLClient.request(gql`
                     mutation {
                         __typename
@@ -35,12 +34,11 @@ async function saveMessage(message){
                             clientMutationId
                         }
                     }
-
             `
             )
-        return message // Promise.resolve({ error: '', data: data})
+        return message
     } catch(e){
-        return e //Promise.reject({ error: e, data: null })
+        return e
     }
 }
 
@@ -96,8 +94,6 @@ module.exports.sendMessage = function(request, response){
 
     const promises = messages.map(async (message) => {
         try {
-            //console.log(`message:` + message);
-
             const data = await graphQLClient.request(gql`
                 {
                     allClsEventTypes(condition: {code: "${message.event_type}", isDeleted: false}) {
@@ -117,7 +113,6 @@ module.exports.sendMessage = function(request, response){
                     }
                 }
             `)
-//            console.log("result: " + JSON.stringify(data));
 /*
 {
   "data": {
@@ -161,9 +156,7 @@ module.exports.sendMessage = function(request, response){
                             logger.error('message.id_incom_request (' + message.id_incom_request + ') error set status')
                         })
                 }
-
                 return await saveMessage(message)
-
             }
         }catch (e) {
             throw message

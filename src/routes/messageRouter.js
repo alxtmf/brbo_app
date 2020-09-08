@@ -1,7 +1,7 @@
 const express = require("express")
-const messageController = require("../controllers/messageController")
+const msgController = require("../controllers/msgController")
 const messageRouter = express.Router()
 
-messageRouter.post("/send", messageController.sendMessage)
+messageRouter.post("/send", msgController.sendMessage)
 
 module.exports = messageRouter
