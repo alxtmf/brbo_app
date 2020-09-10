@@ -6,6 +6,10 @@ const dbUrl = `postgres://${PG_USER}:${PASSWORD}@${HOST}:${PG_PORT}/${DATABASE}`
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 const devOptions = {
+    watchPg: true,
+    graphiql: true,
+    enhanceGraphiql: true,
+/*
     subscriptions: true,
     watchPg: true,
     dynamicJson: true,
@@ -23,6 +27,7 @@ const devOptions = {
     },
     enableQueryBatching: true,
     legacyRelations: "omit"
+*/
 };
 
 const prodOptions = {
