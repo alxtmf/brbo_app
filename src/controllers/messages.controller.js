@@ -105,7 +105,6 @@ class MessagesController {
         const promises = messages.map(async (message) => {
             try {
                 let data = await MessageService.findEventType(message)
-                data = false
                 if (!data || data.allClsEventTypes.nodes[0].uuid == "" && data.allClsEventTypes.nodes[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0) {
                     throw message
                 } else {

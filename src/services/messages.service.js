@@ -35,22 +35,49 @@ class MessagesService {
 
     // updateMessage(){  }
 
-    async deleteMessage(message){
+    async deleteNoSentMessages(params){
         try {
-            if(message.uuid) {
+            if(params) {
                 //delete mutation
                 const data = await graphQLClient.request(gql`
                             mutation {
+                                __typename
+                                deleteNoSentMessages(input: { threshold: ${params.threshold} }){
+                                    bigInt
+                                }
                             }
                     `
                 )
-                return message
+                return data.deleteNoSentMessages.bigInt
             } else {
-                return false
+                return 0
             }
         } catch(e){
-            logger.info(`deleteMessage(${message}) - ` + e)
-            return false
+            logger.info(`deleteNoSentMessage(${params}) - ` + e)
+            return 0
+        }
+    }
+
+    async deleteSentMessages(params){
+        try {
+            if(params) {
+                //delete mutation
+                const data = await graphQLClient.request(gql`
+                            mutation {
+                                __typename
+                                deleteSentMessages(input: { threshold: ${params.threshold} }){
+                                    bigInt
+                                }
+                            }
+                    `
+                )
+                return data.deleteSentMessages.bigInt
+            } else {
+                return 0
+            }
+        } catch(e){
+            logger.info(`deleteSentMessage(${params}) - ` + e)
+            return 0
         }
     }
 
@@ -99,6 +126,19 @@ class MessagesService {
                             }
                         }
                     }
+                }
+            `)
+            return data
+        } catch (e) {
+            logger.info(`findEventType(${message}) - ` + e)
+            return false
+        }
+    }
+
+    async findMessage(status){
+        try {
+            let data = await graphQLClient.request(gql`
+                {
                 }
             `)
             return data
