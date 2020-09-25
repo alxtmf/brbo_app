@@ -1,0 +1,3197 @@
+type ClsBot implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  code: String
+  name: String
+  dateCreate: Datetime!
+  isDeleted: Boolean!
+  idMessenger: UUID!
+  settings: JSON
+}
+
+"""
+A condition to be used against `ClsBot` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ClsBotCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `ClsBot`"""
+input ClsBotInput {
+  uuid: UUID
+  code: String
+  name: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+  idMessenger: UUID!
+  settings: JSON
+}
+
+"""
+Represents an update to a `ClsBot`. Fields that are set will be updated.
+"""
+input ClsBotPatch {
+  uuid: UUID
+  code: String
+  name: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+  idMessenger: UUID
+  settings: JSON
+}
+
+"""A connection to a list of `ClsBot` values."""
+type ClsBotsConnection {
+  """A list of `ClsBot` objects."""
+  nodes: [ClsBot!]!
+
+  """
+  A list of edges which contains the `ClsBot` and cursor to aid in pagination.
+  """
+  edges: [ClsBotsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ClsBot` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `ClsBot` edge in the connection."""
+type ClsBotsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ClsBot` at the end of the edge."""
+  node: ClsBot!
+}
+
+"""Methods to use when ordering `ClsBot`."""
+enum ClsBotsOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type ClsEventType implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  code: String
+  name: String
+  dateCreate: Datetime!
+  isDeleted: Boolean!
+  idTargetSystem: UUID!
+  idParent: UUID
+  type: Int!
+}
+
+"""
+A condition to be used against `ClsEventType` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ClsEventTypeCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `ClsEventType`"""
+input ClsEventTypeInput {
+  uuid: UUID
+  code: String
+  name: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+  idTargetSystem: UUID!
+  idParent: UUID
+  type: Int
+}
+
+"""
+Represents an update to a `ClsEventType`. Fields that are set will be updated.
+"""
+input ClsEventTypePatch {
+  uuid: UUID
+  code: String
+  name: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+  idTargetSystem: UUID
+  idParent: UUID
+  type: Int
+}
+
+"""A connection to a list of `ClsEventType` values."""
+type ClsEventTypesConnection {
+  """A list of `ClsEventType` objects."""
+  nodes: [ClsEventType!]!
+
+  """
+  A list of edges which contains the `ClsEventType` and cursor to aid in pagination.
+  """
+  edges: [ClsEventTypesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ClsEventType` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `ClsEventType` edge in the connection."""
+type ClsEventTypesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ClsEventType` at the end of the edge."""
+  node: ClsEventType!
+}
+
+"""Methods to use when ordering `ClsEventType`."""
+enum ClsEventTypesOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type ClsMessenger implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  code: String
+  name: String
+  dateCreate: Datetime!
+  isDeleted: Boolean!
+}
+
+"""
+A condition to be used against `ClsMessenger` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ClsMessengerCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `ClsMessenger`"""
+input ClsMessengerInput {
+  uuid: UUID
+  code: String
+  name: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+}
+
+"""
+Represents an update to a `ClsMessenger`. Fields that are set will be updated.
+"""
+input ClsMessengerPatch {
+  uuid: UUID
+  code: String
+  name: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+}
+
+"""A connection to a list of `ClsMessenger` values."""
+type ClsMessengersConnection {
+  """A list of `ClsMessenger` objects."""
+  nodes: [ClsMessenger!]!
+
+  """
+  A list of edges which contains the `ClsMessenger` and cursor to aid in pagination.
+  """
+  edges: [ClsMessengersEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ClsMessenger` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `ClsMessenger` edge in the connection."""
+type ClsMessengersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ClsMessenger` at the end of the edge."""
+  node: ClsMessenger!
+}
+
+"""Methods to use when ordering `ClsMessenger`."""
+enum ClsMessengersOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type ClsTargetSystem implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  code: String
+  name: String
+  dateCreate: Datetime!
+  isDeleted: Boolean!
+}
+
+"""
+A condition to be used against `ClsTargetSystem` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ClsTargetSystemCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `ClsTargetSystem`"""
+input ClsTargetSystemInput {
+  uuid: UUID
+  code: String
+  name: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+}
+
+"""
+Represents an update to a `ClsTargetSystem`. Fields that are set will be updated.
+"""
+input ClsTargetSystemPatch {
+  uuid: UUID
+  code: String
+  name: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+}
+
+"""A connection to a list of `ClsTargetSystem` values."""
+type ClsTargetSystemsConnection {
+  """A list of `ClsTargetSystem` objects."""
+  nodes: [ClsTargetSystem!]!
+
+  """
+  A list of edges which contains the `ClsTargetSystem` and cursor to aid in pagination.
+  """
+  edges: [ClsTargetSystemsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ClsTargetSystem` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `ClsTargetSystem` edge in the connection."""
+type ClsTargetSystemsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ClsTargetSystem` at the end of the edge."""
+  node: ClsTargetSystem!
+}
+
+"""Methods to use when ordering `ClsTargetSystem`."""
+enum ClsTargetSystemsOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type ClsUser implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  code: String
+  dateCreate: Datetime!
+  isDeleted: Boolean!
+  login: String
+  firstname: String
+  lastname: String
+  patronymic: String
+  email: String
+  identificator: String
+}
+
+"""
+A condition to be used against `ClsUser` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ClsUserCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `ClsUser`"""
+input ClsUserInput {
+  uuid: UUID
+  code: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+  login: String
+  firstname: String
+  lastname: String
+  patronymic: String
+  email: String
+  identificator: String
+}
+
+"""
+Represents an update to a `ClsUser`. Fields that are set will be updated.
+"""
+input ClsUserPatch {
+  uuid: UUID
+  code: String
+  dateCreate: Datetime
+  isDeleted: Boolean
+  login: String
+  firstname: String
+  lastname: String
+  patronymic: String
+  email: String
+  identificator: String
+}
+
+"""A connection to a list of `ClsUser` values."""
+type ClsUsersConnection {
+  """A list of `ClsUser` objects."""
+  nodes: [ClsUser!]!
+
+  """
+  A list of edges which contains the `ClsUser` and cursor to aid in pagination.
+  """
+  edges: [ClsUsersEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ClsUser` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `ClsUser` edge in the connection."""
+type ClsUsersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ClsUser` at the end of the edge."""
+  node: ClsUser!
+}
+
+"""Methods to use when ordering `ClsUser`."""
+enum ClsUsersOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""All input for the create `ClsBot` mutation."""
+input CreateClsBotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ClsBot` to be created by this mutation."""
+  clsBot: ClsBotInput!
+}
+
+"""The output of our create `ClsBot` mutation."""
+type CreateClsBotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsBot` that was created by this mutation."""
+  clsBot: ClsBot
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsBot`. May be used by Relay 1."""
+  clsBotEdge(
+    """The method to use when ordering `ClsBot`."""
+    orderBy: [ClsBotsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsBotsEdge
+}
+
+"""All input for the create `ClsEventType` mutation."""
+input CreateClsEventTypeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ClsEventType` to be created by this mutation."""
+  clsEventType: ClsEventTypeInput!
+}
+
+"""The output of our create `ClsEventType` mutation."""
+type CreateClsEventTypePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsEventType` that was created by this mutation."""
+  clsEventType: ClsEventType
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsEventType`. May be used by Relay 1."""
+  clsEventTypeEdge(
+    """The method to use when ordering `ClsEventType`."""
+    orderBy: [ClsEventTypesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsEventTypesEdge
+}
+
+"""All input for the create `ClsMessenger` mutation."""
+input CreateClsMessengerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ClsMessenger` to be created by this mutation."""
+  clsMessenger: ClsMessengerInput!
+}
+
+"""The output of our create `ClsMessenger` mutation."""
+type CreateClsMessengerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsMessenger` that was created by this mutation."""
+  clsMessenger: ClsMessenger
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsMessenger`. May be used by Relay 1."""
+  clsMessengerEdge(
+    """The method to use when ordering `ClsMessenger`."""
+    orderBy: [ClsMessengersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsMessengersEdge
+}
+
+"""All input for the create `ClsTargetSystem` mutation."""
+input CreateClsTargetSystemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ClsTargetSystem` to be created by this mutation."""
+  clsTargetSystem: ClsTargetSystemInput!
+}
+
+"""The output of our create `ClsTargetSystem` mutation."""
+type CreateClsTargetSystemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsTargetSystem` that was created by this mutation."""
+  clsTargetSystem: ClsTargetSystem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsTargetSystem`. May be used by Relay 1."""
+  clsTargetSystemEdge(
+    """The method to use when ordering `ClsTargetSystem`."""
+    orderBy: [ClsTargetSystemsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsTargetSystemsEdge
+}
+
+"""All input for the create `ClsUser` mutation."""
+input CreateClsUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ClsUser` to be created by this mutation."""
+  clsUser: ClsUserInput!
+}
+
+"""The output of our create `ClsUser` mutation."""
+type CreateClsUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsUser` that was created by this mutation."""
+  clsUser: ClsUser
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsUser`. May be used by Relay 1."""
+  clsUserEdge(
+    """The method to use when ordering `ClsUser`."""
+    orderBy: [ClsUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsUsersEdge
+}
+
+"""All input for the create `RegIncomRequest` mutation."""
+input CreateRegIncomRequestInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RegIncomRequest` to be created by this mutation."""
+  regIncomRequest: RegIncomRequestInput!
+}
+
+"""The output of our create `RegIncomRequest` mutation."""
+type CreateRegIncomRequestPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegIncomRequest` that was created by this mutation."""
+  regIncomRequest: RegIncomRequest
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegIncomRequest`. May be used by Relay 1."""
+  regIncomRequestEdge(
+    """The method to use when ordering `RegIncomRequest`."""
+    orderBy: [RegIncomRequestsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegIncomRequestsEdge
+}
+
+"""All input for the create `RegMessageRoute` mutation."""
+input CreateRegMessageRouteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RegMessageRoute` to be created by this mutation."""
+  regMessageRoute: RegMessageRouteInput!
+}
+
+"""The output of our create `RegMessageRoute` mutation."""
+type CreateRegMessageRoutePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegMessageRoute` that was created by this mutation."""
+  regMessageRoute: RegMessageRoute
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegMessageRoute`. May be used by Relay 1."""
+  regMessageRouteEdge(
+    """The method to use when ordering `RegMessageRoute`."""
+    orderBy: [RegMessageRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegMessageRoutesEdge
+}
+
+"""All input for the create `RegMessengerUser` mutation."""
+input CreateRegMessengerUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RegMessengerUser` to be created by this mutation."""
+  regMessengerUser: RegMessengerUserInput!
+}
+
+"""The output of our create `RegMessengerUser` mutation."""
+type CreateRegMessengerUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegMessengerUser` that was created by this mutation."""
+  regMessengerUser: RegMessengerUser
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegMessengerUser`. May be used by Relay 1."""
+  regMessengerUserEdge(
+    """The method to use when ordering `RegMessengerUser`."""
+    orderBy: [RegMessengerUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegMessengerUsersEdge
+}
+
+"""All input for the create `RegSentMessage` mutation."""
+input CreateRegSentMessageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RegSentMessage` to be created by this mutation."""
+  regSentMessage: RegSentMessageInput!
+}
+
+"""The output of our create `RegSentMessage` mutation."""
+type CreateRegSentMessagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegSentMessage` that was created by this mutation."""
+  regSentMessage: RegSentMessage
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegSentMessage`. May be used by Relay 1."""
+  regSentMessageEdge(
+    """The method to use when ordering `RegSentMessage`."""
+    orderBy: [RegSentMessagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegSentMessagesEdge
+}
+
+"""All input for the create `RegTargetSystemUser` mutation."""
+input CreateRegTargetSystemUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RegTargetSystemUser` to be created by this mutation."""
+  regTargetSystemUser: RegTargetSystemUserInput!
+}
+
+"""The output of our create `RegTargetSystemUser` mutation."""
+type CreateRegTargetSystemUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegTargetSystemUser` that was created by this mutation."""
+  regTargetSystemUser: RegTargetSystemUser
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegTargetSystemUser`. May be used by Relay 1."""
+  regTargetSystemUserEdge(
+    """The method to use when ordering `RegTargetSystemUser`."""
+    orderBy: [RegTargetSystemUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegTargetSystemUsersEdge
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+"""
+scalar Datetime
+
+"""All input for the `deleteClsBotByNodeId` mutation."""
+input DeleteClsBotByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsBot` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteClsBot` mutation."""
+input DeleteClsBotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `ClsBot` mutation."""
+type DeleteClsBotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsBot` that was deleted by this mutation."""
+  clsBot: ClsBot
+  deletedClsBotNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsBot`. May be used by Relay 1."""
+  clsBotEdge(
+    """The method to use when ordering `ClsBot`."""
+    orderBy: [ClsBotsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsBotsEdge
+}
+
+"""All input for the `deleteClsEventTypeByNodeId` mutation."""
+input DeleteClsEventTypeByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsEventType` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteClsEventType` mutation."""
+input DeleteClsEventTypeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `ClsEventType` mutation."""
+type DeleteClsEventTypePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsEventType` that was deleted by this mutation."""
+  clsEventType: ClsEventType
+  deletedClsEventTypeNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsEventType`. May be used by Relay 1."""
+  clsEventTypeEdge(
+    """The method to use when ordering `ClsEventType`."""
+    orderBy: [ClsEventTypesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsEventTypesEdge
+}
+
+"""All input for the `deleteClsMessengerByNodeId` mutation."""
+input DeleteClsMessengerByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsMessenger` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteClsMessenger` mutation."""
+input DeleteClsMessengerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `ClsMessenger` mutation."""
+type DeleteClsMessengerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsMessenger` that was deleted by this mutation."""
+  clsMessenger: ClsMessenger
+  deletedClsMessengerNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsMessenger`. May be used by Relay 1."""
+  clsMessengerEdge(
+    """The method to use when ordering `ClsMessenger`."""
+    orderBy: [ClsMessengersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsMessengersEdge
+}
+
+"""All input for the `deleteClsTargetSystemByNodeId` mutation."""
+input DeleteClsTargetSystemByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsTargetSystem` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteClsTargetSystem` mutation."""
+input DeleteClsTargetSystemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `ClsTargetSystem` mutation."""
+type DeleteClsTargetSystemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsTargetSystem` that was deleted by this mutation."""
+  clsTargetSystem: ClsTargetSystem
+  deletedClsTargetSystemNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsTargetSystem`. May be used by Relay 1."""
+  clsTargetSystemEdge(
+    """The method to use when ordering `ClsTargetSystem`."""
+    orderBy: [ClsTargetSystemsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsTargetSystemsEdge
+}
+
+"""All input for the `deleteClsUserByNodeId` mutation."""
+input DeleteClsUserByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsUser` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteClsUser` mutation."""
+input DeleteClsUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `ClsUser` mutation."""
+type DeleteClsUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsUser` that was deleted by this mutation."""
+  clsUser: ClsUser
+  deletedClsUserNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsUser`. May be used by Relay 1."""
+  clsUserEdge(
+    """The method to use when ordering `ClsUser`."""
+    orderBy: [ClsUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsUsersEdge
+}
+
+"""All input for the `deleteRegIncomRequestByNodeId` mutation."""
+input DeleteRegIncomRequestByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegIncomRequest` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteRegIncomRequest` mutation."""
+input DeleteRegIncomRequestInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `RegIncomRequest` mutation."""
+type DeleteRegIncomRequestPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegIncomRequest` that was deleted by this mutation."""
+  regIncomRequest: RegIncomRequest
+  deletedRegIncomRequestNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegIncomRequest`. May be used by Relay 1."""
+  regIncomRequestEdge(
+    """The method to use when ordering `RegIncomRequest`."""
+    orderBy: [RegIncomRequestsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegIncomRequestsEdge
+}
+
+"""All input for the `deleteRegMessageRouteByNodeId` mutation."""
+input DeleteRegMessageRouteByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegMessageRoute` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteRegMessageRoute` mutation."""
+input DeleteRegMessageRouteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `RegMessageRoute` mutation."""
+type DeleteRegMessageRoutePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegMessageRoute` that was deleted by this mutation."""
+  regMessageRoute: RegMessageRoute
+  deletedRegMessageRouteNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegMessageRoute`. May be used by Relay 1."""
+  regMessageRouteEdge(
+    """The method to use when ordering `RegMessageRoute`."""
+    orderBy: [RegMessageRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegMessageRoutesEdge
+}
+
+"""All input for the `deleteRegMessengerUserByNodeId` mutation."""
+input DeleteRegMessengerUserByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegMessengerUser` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteRegMessengerUser` mutation."""
+input DeleteRegMessengerUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `RegMessengerUser` mutation."""
+type DeleteRegMessengerUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegMessengerUser` that was deleted by this mutation."""
+  regMessengerUser: RegMessengerUser
+  deletedRegMessengerUserNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegMessengerUser`. May be used by Relay 1."""
+  regMessengerUserEdge(
+    """The method to use when ordering `RegMessengerUser`."""
+    orderBy: [RegMessengerUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegMessengerUsersEdge
+}
+
+"""All input for the `deleteRegSentMessageByNodeId` mutation."""
+input DeleteRegSentMessageByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegSentMessage` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteRegSentMessage` mutation."""
+input DeleteRegSentMessageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `RegSentMessage` mutation."""
+type DeleteRegSentMessagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegSentMessage` that was deleted by this mutation."""
+  regSentMessage: RegSentMessage
+  deletedRegSentMessageNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegSentMessage`. May be used by Relay 1."""
+  regSentMessageEdge(
+    """The method to use when ordering `RegSentMessage`."""
+    orderBy: [RegSentMessagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegSentMessagesEdge
+}
+
+"""All input for the `deleteRegTargetSystemUserByNodeId` mutation."""
+input DeleteRegTargetSystemUserByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegTargetSystemUser` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteRegTargetSystemUser` mutation."""
+input DeleteRegTargetSystemUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  uuid: UUID!
+}
+
+"""The output of our delete `RegTargetSystemUser` mutation."""
+type DeleteRegTargetSystemUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegTargetSystemUser` that was deleted by this mutation."""
+  regTargetSystemUser: RegTargetSystemUser
+  deletedRegTargetSystemUserNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegTargetSystemUser`. May be used by Relay 1."""
+  regTargetSystemUserEdge(
+    """The method to use when ordering `RegTargetSystemUser`."""
+    orderBy: [RegTargetSystemUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegTargetSystemUsersEdge
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+The root mutation type which contains root level fields which mutate data.
+"""
+type Mutation {
+  """Creates a single `ClsBot`."""
+  createClsBot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateClsBotInput!
+  ): CreateClsBotPayload
+
+  """Creates a single `ClsEventType`."""
+  createClsEventType(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateClsEventTypeInput!
+  ): CreateClsEventTypePayload
+
+  """Creates a single `ClsMessenger`."""
+  createClsMessenger(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateClsMessengerInput!
+  ): CreateClsMessengerPayload
+
+  """Creates a single `ClsTargetSystem`."""
+  createClsTargetSystem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateClsTargetSystemInput!
+  ): CreateClsTargetSystemPayload
+
+  """Creates a single `ClsUser`."""
+  createClsUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateClsUserInput!
+  ): CreateClsUserPayload
+
+  """Creates a single `RegIncomRequest`."""
+  createRegIncomRequest(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRegIncomRequestInput!
+  ): CreateRegIncomRequestPayload
+
+  """Creates a single `RegMessageRoute`."""
+  createRegMessageRoute(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRegMessageRouteInput!
+  ): CreateRegMessageRoutePayload
+
+  """Creates a single `RegMessengerUser`."""
+  createRegMessengerUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRegMessengerUserInput!
+  ): CreateRegMessengerUserPayload
+
+  """Creates a single `RegSentMessage`."""
+  createRegSentMessage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRegSentMessageInput!
+  ): CreateRegSentMessagePayload
+
+  """Creates a single `RegTargetSystemUser`."""
+  createRegTargetSystemUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRegTargetSystemUserInput!
+  ): CreateRegTargetSystemUserPayload
+
+  """Updates a single `ClsBot` using its globally unique id and a patch."""
+  updateClsBotByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsBotByNodeIdInput!
+  ): UpdateClsBotPayload
+
+  """Updates a single `ClsBot` using a unique key and a patch."""
+  updateClsBot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsBotInput!
+  ): UpdateClsBotPayload
+
+  """
+  Updates a single `ClsEventType` using its globally unique id and a patch.
+  """
+  updateClsEventTypeByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsEventTypeByNodeIdInput!
+  ): UpdateClsEventTypePayload
+
+  """Updates a single `ClsEventType` using a unique key and a patch."""
+  updateClsEventType(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsEventTypeInput!
+  ): UpdateClsEventTypePayload
+
+  """
+  Updates a single `ClsMessenger` using its globally unique id and a patch.
+  """
+  updateClsMessengerByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsMessengerByNodeIdInput!
+  ): UpdateClsMessengerPayload
+
+  """Updates a single `ClsMessenger` using a unique key and a patch."""
+  updateClsMessenger(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsMessengerInput!
+  ): UpdateClsMessengerPayload
+
+  """
+  Updates a single `ClsTargetSystem` using its globally unique id and a patch.
+  """
+  updateClsTargetSystemByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsTargetSystemByNodeIdInput!
+  ): UpdateClsTargetSystemPayload
+
+  """Updates a single `ClsTargetSystem` using a unique key and a patch."""
+  updateClsTargetSystem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsTargetSystemInput!
+  ): UpdateClsTargetSystemPayload
+
+  """Updates a single `ClsUser` using its globally unique id and a patch."""
+  updateClsUserByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsUserByNodeIdInput!
+  ): UpdateClsUserPayload
+
+  """Updates a single `ClsUser` using a unique key and a patch."""
+  updateClsUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClsUserInput!
+  ): UpdateClsUserPayload
+
+  """
+  Updates a single `RegIncomRequest` using its globally unique id and a patch.
+  """
+  updateRegIncomRequestByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegIncomRequestByNodeIdInput!
+  ): UpdateRegIncomRequestPayload
+
+  """Updates a single `RegIncomRequest` using a unique key and a patch."""
+  updateRegIncomRequest(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegIncomRequestInput!
+  ): UpdateRegIncomRequestPayload
+
+  """
+  Updates a single `RegMessageRoute` using its globally unique id and a patch.
+  """
+  updateRegMessageRouteByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegMessageRouteByNodeIdInput!
+  ): UpdateRegMessageRoutePayload
+
+  """Updates a single `RegMessageRoute` using a unique key and a patch."""
+  updateRegMessageRoute(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegMessageRouteInput!
+  ): UpdateRegMessageRoutePayload
+
+  """
+  Updates a single `RegMessengerUser` using its globally unique id and a patch.
+  """
+  updateRegMessengerUserByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegMessengerUserByNodeIdInput!
+  ): UpdateRegMessengerUserPayload
+
+  """Updates a single `RegMessengerUser` using a unique key and a patch."""
+  updateRegMessengerUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegMessengerUserInput!
+  ): UpdateRegMessengerUserPayload
+
+  """
+  Updates a single `RegSentMessage` using its globally unique id and a patch.
+  """
+  updateRegSentMessageByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegSentMessageByNodeIdInput!
+  ): UpdateRegSentMessagePayload
+
+  """Updates a single `RegSentMessage` using a unique key and a patch."""
+  updateRegSentMessage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegSentMessageInput!
+  ): UpdateRegSentMessagePayload
+
+  """
+  Updates a single `RegTargetSystemUser` using its globally unique id and a patch.
+  """
+  updateRegTargetSystemUserByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegTargetSystemUserByNodeIdInput!
+  ): UpdateRegTargetSystemUserPayload
+
+  """Updates a single `RegTargetSystemUser` using a unique key and a patch."""
+  updateRegTargetSystemUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRegTargetSystemUserInput!
+  ): UpdateRegTargetSystemUserPayload
+
+  """Deletes a single `ClsBot` using its globally unique id."""
+  deleteClsBotByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsBotByNodeIdInput!
+  ): DeleteClsBotPayload
+
+  """Deletes a single `ClsBot` using a unique key."""
+  deleteClsBot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsBotInput!
+  ): DeleteClsBotPayload
+
+  """Deletes a single `ClsEventType` using its globally unique id."""
+  deleteClsEventTypeByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsEventTypeByNodeIdInput!
+  ): DeleteClsEventTypePayload
+
+  """Deletes a single `ClsEventType` using a unique key."""
+  deleteClsEventType(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsEventTypeInput!
+  ): DeleteClsEventTypePayload
+
+  """Deletes a single `ClsMessenger` using its globally unique id."""
+  deleteClsMessengerByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsMessengerByNodeIdInput!
+  ): DeleteClsMessengerPayload
+
+  """Deletes a single `ClsMessenger` using a unique key."""
+  deleteClsMessenger(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsMessengerInput!
+  ): DeleteClsMessengerPayload
+
+  """Deletes a single `ClsTargetSystem` using its globally unique id."""
+  deleteClsTargetSystemByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsTargetSystemByNodeIdInput!
+  ): DeleteClsTargetSystemPayload
+
+  """Deletes a single `ClsTargetSystem` using a unique key."""
+  deleteClsTargetSystem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsTargetSystemInput!
+  ): DeleteClsTargetSystemPayload
+
+  """Deletes a single `ClsUser` using its globally unique id."""
+  deleteClsUserByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsUserByNodeIdInput!
+  ): DeleteClsUserPayload
+
+  """Deletes a single `ClsUser` using a unique key."""
+  deleteClsUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClsUserInput!
+  ): DeleteClsUserPayload
+
+  """Deletes a single `RegIncomRequest` using its globally unique id."""
+  deleteRegIncomRequestByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegIncomRequestByNodeIdInput!
+  ): DeleteRegIncomRequestPayload
+
+  """Deletes a single `RegIncomRequest` using a unique key."""
+  deleteRegIncomRequest(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegIncomRequestInput!
+  ): DeleteRegIncomRequestPayload
+
+  """Deletes a single `RegMessageRoute` using its globally unique id."""
+  deleteRegMessageRouteByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegMessageRouteByNodeIdInput!
+  ): DeleteRegMessageRoutePayload
+
+  """Deletes a single `RegMessageRoute` using a unique key."""
+  deleteRegMessageRoute(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegMessageRouteInput!
+  ): DeleteRegMessageRoutePayload
+
+  """Deletes a single `RegMessengerUser` using its globally unique id."""
+  deleteRegMessengerUserByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegMessengerUserByNodeIdInput!
+  ): DeleteRegMessengerUserPayload
+
+  """Deletes a single `RegMessengerUser` using a unique key."""
+  deleteRegMessengerUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegMessengerUserInput!
+  ): DeleteRegMessengerUserPayload
+
+  """Deletes a single `RegSentMessage` using its globally unique id."""
+  deleteRegSentMessageByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegSentMessageByNodeIdInput!
+  ): DeleteRegSentMessagePayload
+
+  """Deletes a single `RegSentMessage` using a unique key."""
+  deleteRegSentMessage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegSentMessageInput!
+  ): DeleteRegSentMessagePayload
+
+  """Deletes a single `RegTargetSystemUser` using its globally unique id."""
+  deleteRegTargetSystemUserByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegTargetSystemUserByNodeIdInput!
+  ): DeleteRegTargetSystemUserPayload
+
+  """Deletes a single `RegTargetSystemUser` using a unique key."""
+  deleteRegTargetSystemUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRegTargetSystemUserInput!
+  ): DeleteRegTargetSystemUserPayload
+}
+
+"""An object with a globally unique `ID`."""
+interface Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+"""The root query type which gives access points into the data universe."""
+type Query implements Node {
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+
+  """
+  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
+  """
+  nodeId: ID!
+
+  """Fetches an object given its globally unique `ID`."""
+  node(
+    """The globally unique `ID`."""
+    nodeId: ID!
+  ): Node
+
+  """Reads and enables pagination through a set of `ClsBot`."""
+  clsBots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ClsBot`."""
+    orderBy: [ClsBotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ClsBotCondition
+  ): ClsBotsConnection
+
+  """Reads and enables pagination through a set of `ClsEventType`."""
+  clsEventTypes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ClsEventType`."""
+    orderBy: [ClsEventTypesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ClsEventTypeCondition
+  ): ClsEventTypesConnection
+
+  """Reads and enables pagination through a set of `ClsMessenger`."""
+  clsMessengers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ClsMessenger`."""
+    orderBy: [ClsMessengersOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ClsMessengerCondition
+  ): ClsMessengersConnection
+
+  """Reads and enables pagination through a set of `ClsTargetSystem`."""
+  clsTargetSystems(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ClsTargetSystem`."""
+    orderBy: [ClsTargetSystemsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ClsTargetSystemCondition
+  ): ClsTargetSystemsConnection
+
+  """Reads and enables pagination through a set of `ClsUser`."""
+  clsUsers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ClsUser`."""
+    orderBy: [ClsUsersOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ClsUserCondition
+  ): ClsUsersConnection
+
+  """Reads and enables pagination through a set of `RegIncomRequest`."""
+  regIncomRequests(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `RegIncomRequest`."""
+    orderBy: [RegIncomRequestsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RegIncomRequestCondition
+  ): RegIncomRequestsConnection
+
+  """Reads and enables pagination through a set of `RegMessageRoute`."""
+  regMessageRoutes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `RegMessageRoute`."""
+    orderBy: [RegMessageRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RegMessageRouteCondition
+  ): RegMessageRoutesConnection
+
+  """Reads and enables pagination through a set of `RegMessengerUser`."""
+  regMessengerUsers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `RegMessengerUser`."""
+    orderBy: [RegMessengerUsersOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RegMessengerUserCondition
+  ): RegMessengerUsersConnection
+
+  """Reads and enables pagination through a set of `RegSentMessage`."""
+  regSentMessages(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `RegSentMessage`."""
+    orderBy: [RegSentMessagesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RegSentMessageCondition
+  ): RegSentMessagesConnection
+
+  """Reads and enables pagination through a set of `RegTargetSystemUser`."""
+  regTargetSystemUsers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `RegTargetSystemUser`."""
+    orderBy: [RegTargetSystemUsersOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RegTargetSystemUserCondition
+  ): RegTargetSystemUsersConnection
+
+  """
+  Reads and enables pagination through a set of `VMessengerUserMessageRoute`.
+  """
+  vMessengerUserMessageRoutes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `VMessengerUserMessageRoute`."""
+    orderBy: [VMessengerUserMessageRoutesOrderBy!] = [NATURAL]
+  ): VMessengerUserMessageRoutesConnection
+  clsBot(uuid: UUID!): ClsBot
+  clsEventType(uuid: UUID!): ClsEventType
+  clsMessenger(uuid: UUID!): ClsMessenger
+  clsTargetSystem(uuid: UUID!): ClsTargetSystem
+  clsUser(uuid: UUID!): ClsUser
+  regIncomRequest(uuid: UUID!): RegIncomRequest
+  regMessageRoute(uuid: UUID!): RegMessageRoute
+  regMessengerUser(uuid: UUID!): RegMessengerUser
+  regSentMessage(uuid: UUID!): RegSentMessage
+  regTargetSystemUser(uuid: UUID!): RegTargetSystemUser
+
+  """Reads a single `ClsBot` using its globally unique `ID`."""
+  clsBotByNodeId(
+    """The globally unique `ID` to be used in selecting a single `ClsBot`."""
+    nodeId: ID!
+  ): ClsBot
+
+  """Reads a single `ClsEventType` using its globally unique `ID`."""
+  clsEventTypeByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `ClsEventType`.
+    """
+    nodeId: ID!
+  ): ClsEventType
+
+  """Reads a single `ClsMessenger` using its globally unique `ID`."""
+  clsMessengerByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `ClsMessenger`.
+    """
+    nodeId: ID!
+  ): ClsMessenger
+
+  """Reads a single `ClsTargetSystem` using its globally unique `ID`."""
+  clsTargetSystemByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `ClsTargetSystem`.
+    """
+    nodeId: ID!
+  ): ClsTargetSystem
+
+  """Reads a single `ClsUser` using its globally unique `ID`."""
+  clsUserByNodeId(
+    """The globally unique `ID` to be used in selecting a single `ClsUser`."""
+    nodeId: ID!
+  ): ClsUser
+
+  """Reads a single `RegIncomRequest` using its globally unique `ID`."""
+  regIncomRequestByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `RegIncomRequest`.
+    """
+    nodeId: ID!
+  ): RegIncomRequest
+
+  """Reads a single `RegMessageRoute` using its globally unique `ID`."""
+  regMessageRouteByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `RegMessageRoute`.
+    """
+    nodeId: ID!
+  ): RegMessageRoute
+
+  """Reads a single `RegMessengerUser` using its globally unique `ID`."""
+  regMessengerUserByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `RegMessengerUser`.
+    """
+    nodeId: ID!
+  ): RegMessengerUser
+
+  """Reads a single `RegSentMessage` using its globally unique `ID`."""
+  regSentMessageByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `RegSentMessage`.
+    """
+    nodeId: ID!
+  ): RegSentMessage
+
+  """Reads a single `RegTargetSystemUser` using its globally unique `ID`."""
+  regTargetSystemUserByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `RegTargetSystemUser`.
+    """
+    nodeId: ID!
+  ): RegTargetSystemUser
+}
+
+type RegIncomRequest implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  dateCreate: Datetime!
+  idBot: UUID!
+  idMessenger: UUID!
+  idEventType: UUID!
+  idTargetSystem: UUID!
+  idUser: UUID
+  status: Int
+}
+
+"""
+A condition to be used against `RegIncomRequest` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RegIncomRequestCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `RegIncomRequest`"""
+input RegIncomRequestInput {
+  uuid: UUID
+  dateCreate: Datetime
+  idBot: UUID!
+  idMessenger: UUID!
+  idEventType: UUID!
+  idTargetSystem: UUID!
+  idUser: UUID
+  status: Int
+}
+
+"""
+Represents an update to a `RegIncomRequest`. Fields that are set will be updated.
+"""
+input RegIncomRequestPatch {
+  uuid: UUID
+  dateCreate: Datetime
+  idBot: UUID
+  idMessenger: UUID
+  idEventType: UUID
+  idTargetSystem: UUID
+  idUser: UUID
+  status: Int
+}
+
+"""A connection to a list of `RegIncomRequest` values."""
+type RegIncomRequestsConnection {
+  """A list of `RegIncomRequest` objects."""
+  nodes: [RegIncomRequest!]!
+
+  """
+  A list of edges which contains the `RegIncomRequest` and cursor to aid in pagination.
+  """
+  edges: [RegIncomRequestsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `RegIncomRequest` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `RegIncomRequest` edge in the connection."""
+type RegIncomRequestsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RegIncomRequest` at the end of the edge."""
+  node: RegIncomRequest!
+}
+
+"""Methods to use when ordering `RegIncomRequest`."""
+enum RegIncomRequestsOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type RegMessageRoute implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  dateCreate: Datetime!
+  isDeleted: Boolean!
+  dateActivation: Datetime
+  idBot: UUID!
+  idMessenger: UUID!
+  idEventType: UUID!
+  idTargetSystem: UUID!
+  idUser: UUID
+}
+
+"""
+A condition to be used against `RegMessageRoute` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RegMessageRouteCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `RegMessageRoute`"""
+input RegMessageRouteInput {
+  uuid: UUID
+  dateCreate: Datetime
+  isDeleted: Boolean
+  dateActivation: Datetime
+  idBot: UUID!
+  idMessenger: UUID!
+  idEventType: UUID!
+  idTargetSystem: UUID!
+  idUser: UUID
+}
+
+"""
+Represents an update to a `RegMessageRoute`. Fields that are set will be updated.
+"""
+input RegMessageRoutePatch {
+  uuid: UUID
+  dateCreate: Datetime
+  isDeleted: Boolean
+  dateActivation: Datetime
+  idBot: UUID
+  idMessenger: UUID
+  idEventType: UUID
+  idTargetSystem: UUID
+  idUser: UUID
+}
+
+"""A connection to a list of `RegMessageRoute` values."""
+type RegMessageRoutesConnection {
+  """A list of `RegMessageRoute` objects."""
+  nodes: [RegMessageRoute!]!
+
+  """
+  A list of edges which contains the `RegMessageRoute` and cursor to aid in pagination.
+  """
+  edges: [RegMessageRoutesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `RegMessageRoute` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `RegMessageRoute` edge in the connection."""
+type RegMessageRoutesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RegMessageRoute` at the end of the edge."""
+  node: RegMessageRoute!
+}
+
+"""Methods to use when ordering `RegMessageRoute`."""
+enum RegMessageRoutesOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type RegMessengerUser implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  dateCreate: Datetime!
+  isDeleted: Boolean!
+  idMessenger: UUID!
+  idUser: UUID
+  outerId: String
+  settings: JSON
+}
+
+"""
+A condition to be used against `RegMessengerUser` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RegMessengerUserCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `RegMessengerUser`"""
+input RegMessengerUserInput {
+  uuid: UUID
+  dateCreate: Datetime
+  isDeleted: Boolean
+  idMessenger: UUID!
+  idUser: UUID
+  outerId: String
+  settings: JSON
+}
+
+"""
+Represents an update to a `RegMessengerUser`. Fields that are set will be updated.
+"""
+input RegMessengerUserPatch {
+  uuid: UUID
+  dateCreate: Datetime
+  isDeleted: Boolean
+  idMessenger: UUID
+  idUser: UUID
+  outerId: String
+  settings: JSON
+}
+
+"""A connection to a list of `RegMessengerUser` values."""
+type RegMessengerUsersConnection {
+  """A list of `RegMessengerUser` objects."""
+  nodes: [RegMessengerUser!]!
+
+  """
+  A list of edges which contains the `RegMessengerUser` and cursor to aid in pagination.
+  """
+  edges: [RegMessengerUsersEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `RegMessengerUser` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `RegMessengerUser` edge in the connection."""
+type RegMessengerUsersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RegMessengerUser` at the end of the edge."""
+  node: RegMessengerUser!
+}
+
+"""Methods to use when ordering `RegMessengerUser`."""
+enum RegMessengerUsersOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type RegSentMessage implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  dateCreate: Datetime!
+  idEventType: UUID!
+  idTargetSystem: UUID!
+  idUser: UUID
+  text: String
+  status: Int
+  attachedFile: String
+  attachedFileType: String
+  attachedFileSize: Int
+  attachedFileHash: String
+  idIncomRequest: UUID
+  settings: JSON
+}
+
+"""
+A condition to be used against `RegSentMessage` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RegSentMessageCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `RegSentMessage`"""
+input RegSentMessageInput {
+  uuid: UUID
+  dateCreate: Datetime
+  idEventType: UUID!
+  idTargetSystem: UUID!
+  idUser: UUID
+  text: String
+  status: Int
+  attachedFile: String
+  attachedFileType: String
+  attachedFileSize: Int
+  attachedFileHash: String
+  idIncomRequest: UUID
+  settings: JSON
+}
+
+"""
+Represents an update to a `RegSentMessage`. Fields that are set will be updated.
+"""
+input RegSentMessagePatch {
+  uuid: UUID
+  dateCreate: Datetime
+  idEventType: UUID
+  idTargetSystem: UUID
+  idUser: UUID
+  text: String
+  status: Int
+  attachedFile: String
+  attachedFileType: String
+  attachedFileSize: Int
+  attachedFileHash: String
+  idIncomRequest: UUID
+  settings: JSON
+}
+
+"""A connection to a list of `RegSentMessage` values."""
+type RegSentMessagesConnection {
+  """A list of `RegSentMessage` objects."""
+  nodes: [RegSentMessage!]!
+
+  """
+  A list of edges which contains the `RegSentMessage` and cursor to aid in pagination.
+  """
+  edges: [RegSentMessagesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `RegSentMessage` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `RegSentMessage` edge in the connection."""
+type RegSentMessagesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RegSentMessage` at the end of the edge."""
+  node: RegSentMessage!
+}
+
+"""Methods to use when ordering `RegSentMessage`."""
+enum RegSentMessagesOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type RegTargetSystemUser implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  uuid: UUID!
+  dateCreate: Datetime!
+  isDeleted: Boolean!
+  idTargetSystem: UUID!
+  idUser: UUID
+  outerId: String
+  login: String
+  firstname: String
+  lastname: String
+  patronymic: String
+  email: String
+}
+
+"""
+A condition to be used against `RegTargetSystemUser` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input RegTargetSystemUserCondition {
+  """Checks for equality with the object’s `uuid` field."""
+  uuid: UUID
+}
+
+"""An input for mutations affecting `RegTargetSystemUser`"""
+input RegTargetSystemUserInput {
+  uuid: UUID
+  dateCreate: Datetime
+  isDeleted: Boolean
+  idTargetSystem: UUID!
+  idUser: UUID
+  outerId: String
+  login: String
+  firstname: String
+  lastname: String
+  patronymic: String
+  email: String
+}
+
+"""
+Represents an update to a `RegTargetSystemUser`. Fields that are set will be updated.
+"""
+input RegTargetSystemUserPatch {
+  uuid: UUID
+  dateCreate: Datetime
+  isDeleted: Boolean
+  idTargetSystem: UUID
+  idUser: UUID
+  outerId: String
+  login: String
+  firstname: String
+  lastname: String
+  patronymic: String
+  email: String
+}
+
+"""A connection to a list of `RegTargetSystemUser` values."""
+type RegTargetSystemUsersConnection {
+  """A list of `RegTargetSystemUser` objects."""
+  nodes: [RegTargetSystemUser!]!
+
+  """
+  A list of edges which contains the `RegTargetSystemUser` and cursor to aid in pagination.
+  """
+  edges: [RegTargetSystemUsersEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `RegTargetSystemUser` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `RegTargetSystemUser` edge in the connection."""
+type RegTargetSystemUsersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RegTargetSystemUser` at the end of the edge."""
+  node: RegTargetSystemUser!
+}
+
+"""Methods to use when ordering `RegTargetSystemUser`."""
+enum RegTargetSystemUsersOrderBy {
+  NATURAL
+  UUID_ASC
+  UUID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""All input for the `updateClsBotByNodeId` mutation."""
+input UpdateClsBotByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsBot` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `ClsBot` being updated.
+  """
+  patch: ClsBotPatch!
+}
+
+"""All input for the `updateClsBot` mutation."""
+input UpdateClsBotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ClsBot` being updated.
+  """
+  patch: ClsBotPatch!
+  uuid: UUID!
+}
+
+"""The output of our update `ClsBot` mutation."""
+type UpdateClsBotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsBot` that was updated by this mutation."""
+  clsBot: ClsBot
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsBot`. May be used by Relay 1."""
+  clsBotEdge(
+    """The method to use when ordering `ClsBot`."""
+    orderBy: [ClsBotsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsBotsEdge
+}
+
+"""All input for the `updateClsEventTypeByNodeId` mutation."""
+input UpdateClsEventTypeByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsEventType` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `ClsEventType` being updated.
+  """
+  patch: ClsEventTypePatch!
+}
+
+"""All input for the `updateClsEventType` mutation."""
+input UpdateClsEventTypeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ClsEventType` being updated.
+  """
+  patch: ClsEventTypePatch!
+  uuid: UUID!
+}
+
+"""The output of our update `ClsEventType` mutation."""
+type UpdateClsEventTypePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsEventType` that was updated by this mutation."""
+  clsEventType: ClsEventType
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsEventType`. May be used by Relay 1."""
+  clsEventTypeEdge(
+    """The method to use when ordering `ClsEventType`."""
+    orderBy: [ClsEventTypesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsEventTypesEdge
+}
+
+"""All input for the `updateClsMessengerByNodeId` mutation."""
+input UpdateClsMessengerByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsMessenger` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `ClsMessenger` being updated.
+  """
+  patch: ClsMessengerPatch!
+}
+
+"""All input for the `updateClsMessenger` mutation."""
+input UpdateClsMessengerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ClsMessenger` being updated.
+  """
+  patch: ClsMessengerPatch!
+  uuid: UUID!
+}
+
+"""The output of our update `ClsMessenger` mutation."""
+type UpdateClsMessengerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsMessenger` that was updated by this mutation."""
+  clsMessenger: ClsMessenger
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsMessenger`. May be used by Relay 1."""
+  clsMessengerEdge(
+    """The method to use when ordering `ClsMessenger`."""
+    orderBy: [ClsMessengersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsMessengersEdge
+}
+
+"""All input for the `updateClsTargetSystemByNodeId` mutation."""
+input UpdateClsTargetSystemByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsTargetSystem` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `ClsTargetSystem` being updated.
+  """
+  patch: ClsTargetSystemPatch!
+}
+
+"""All input for the `updateClsTargetSystem` mutation."""
+input UpdateClsTargetSystemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ClsTargetSystem` being updated.
+  """
+  patch: ClsTargetSystemPatch!
+  uuid: UUID!
+}
+
+"""The output of our update `ClsTargetSystem` mutation."""
+type UpdateClsTargetSystemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsTargetSystem` that was updated by this mutation."""
+  clsTargetSystem: ClsTargetSystem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsTargetSystem`. May be used by Relay 1."""
+  clsTargetSystemEdge(
+    """The method to use when ordering `ClsTargetSystem`."""
+    orderBy: [ClsTargetSystemsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsTargetSystemsEdge
+}
+
+"""All input for the `updateClsUserByNodeId` mutation."""
+input UpdateClsUserByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ClsUser` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `ClsUser` being updated.
+  """
+  patch: ClsUserPatch!
+}
+
+"""All input for the `updateClsUser` mutation."""
+input UpdateClsUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ClsUser` being updated.
+  """
+  patch: ClsUserPatch!
+  uuid: UUID!
+}
+
+"""The output of our update `ClsUser` mutation."""
+type UpdateClsUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ClsUser` that was updated by this mutation."""
+  clsUser: ClsUser
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ClsUser`. May be used by Relay 1."""
+  clsUserEdge(
+    """The method to use when ordering `ClsUser`."""
+    orderBy: [ClsUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClsUsersEdge
+}
+
+"""All input for the `updateRegIncomRequestByNodeId` mutation."""
+input UpdateRegIncomRequestByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegIncomRequest` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `RegIncomRequest` being updated.
+  """
+  patch: RegIncomRequestPatch!
+}
+
+"""All input for the `updateRegIncomRequest` mutation."""
+input UpdateRegIncomRequestInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `RegIncomRequest` being updated.
+  """
+  patch: RegIncomRequestPatch!
+  uuid: UUID!
+}
+
+"""The output of our update `RegIncomRequest` mutation."""
+type UpdateRegIncomRequestPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegIncomRequest` that was updated by this mutation."""
+  regIncomRequest: RegIncomRequest
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegIncomRequest`. May be used by Relay 1."""
+  regIncomRequestEdge(
+    """The method to use when ordering `RegIncomRequest`."""
+    orderBy: [RegIncomRequestsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegIncomRequestsEdge
+}
+
+"""All input for the `updateRegMessageRouteByNodeId` mutation."""
+input UpdateRegMessageRouteByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegMessageRoute` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `RegMessageRoute` being updated.
+  """
+  patch: RegMessageRoutePatch!
+}
+
+"""All input for the `updateRegMessageRoute` mutation."""
+input UpdateRegMessageRouteInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `RegMessageRoute` being updated.
+  """
+  patch: RegMessageRoutePatch!
+  uuid: UUID!
+}
+
+"""The output of our update `RegMessageRoute` mutation."""
+type UpdateRegMessageRoutePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegMessageRoute` that was updated by this mutation."""
+  regMessageRoute: RegMessageRoute
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegMessageRoute`. May be used by Relay 1."""
+  regMessageRouteEdge(
+    """The method to use when ordering `RegMessageRoute`."""
+    orderBy: [RegMessageRoutesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegMessageRoutesEdge
+}
+
+"""All input for the `updateRegMessengerUserByNodeId` mutation."""
+input UpdateRegMessengerUserByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegMessengerUser` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `RegMessengerUser` being updated.
+  """
+  patch: RegMessengerUserPatch!
+}
+
+"""All input for the `updateRegMessengerUser` mutation."""
+input UpdateRegMessengerUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `RegMessengerUser` being updated.
+  """
+  patch: RegMessengerUserPatch!
+  uuid: UUID!
+}
+
+"""The output of our update `RegMessengerUser` mutation."""
+type UpdateRegMessengerUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegMessengerUser` that was updated by this mutation."""
+  regMessengerUser: RegMessengerUser
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegMessengerUser`. May be used by Relay 1."""
+  regMessengerUserEdge(
+    """The method to use when ordering `RegMessengerUser`."""
+    orderBy: [RegMessengerUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegMessengerUsersEdge
+}
+
+"""All input for the `updateRegSentMessageByNodeId` mutation."""
+input UpdateRegSentMessageByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegSentMessage` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `RegSentMessage` being updated.
+  """
+  patch: RegSentMessagePatch!
+}
+
+"""All input for the `updateRegSentMessage` mutation."""
+input UpdateRegSentMessageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `RegSentMessage` being updated.
+  """
+  patch: RegSentMessagePatch!
+  uuid: UUID!
+}
+
+"""The output of our update `RegSentMessage` mutation."""
+type UpdateRegSentMessagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegSentMessage` that was updated by this mutation."""
+  regSentMessage: RegSentMessage
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegSentMessage`. May be used by Relay 1."""
+  regSentMessageEdge(
+    """The method to use when ordering `RegSentMessage`."""
+    orderBy: [RegSentMessagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegSentMessagesEdge
+}
+
+"""All input for the `updateRegTargetSystemUserByNodeId` mutation."""
+input UpdateRegTargetSystemUserByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RegTargetSystemUser` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `RegTargetSystemUser` being updated.
+  """
+  patch: RegTargetSystemUserPatch!
+}
+
+"""All input for the `updateRegTargetSystemUser` mutation."""
+input UpdateRegTargetSystemUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `RegTargetSystemUser` being updated.
+  """
+  patch: RegTargetSystemUserPatch!
+  uuid: UUID!
+}
+
+"""The output of our update `RegTargetSystemUser` mutation."""
+type UpdateRegTargetSystemUserPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RegTargetSystemUser` that was updated by this mutation."""
+  regTargetSystemUser: RegTargetSystemUser
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RegTargetSystemUser`. May be used by Relay 1."""
+  regTargetSystemUserEdge(
+    """The method to use when ordering `RegTargetSystemUser`."""
+    orderBy: [RegTargetSystemUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RegTargetSystemUsersEdge
+}
+
+"""
+A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
+"""
+scalar UUID
+
+type VMessengerUserMessageRoute {
+  idBot: UUID
+  idUser: UUID
+  idMessenger: UUID
+  idEventType: UUID
+  idTargetSystem: UUID
+  idParentEventType: UUID
+  outerId: String
+  userSettings: JSON
+  botName: String
+  botSettings: JSON
+}
+
+"""A connection to a list of `VMessengerUserMessageRoute` values."""
+type VMessengerUserMessageRoutesConnection {
+  """A list of `VMessengerUserMessageRoute` objects."""
+  nodes: [VMessengerUserMessageRoute!]!
+
+  """
+  A list of edges which contains the `VMessengerUserMessageRoute` and cursor to aid in pagination.
+  """
+  edges: [VMessengerUserMessageRoutesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `VMessengerUserMessageRoute` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `VMessengerUserMessageRoute` edge in the connection."""
+type VMessengerUserMessageRoutesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `VMessengerUserMessageRoute` at the end of the edge."""
+  node: VMessengerUserMessageRoute!
+}
+
+"""Methods to use when ordering `VMessengerUserMessageRoute`."""
+enum VMessengerUserMessageRoutesOrderBy {
+  NATURAL
+}
