@@ -1,4 +1,5 @@
 const { postgraphile } = require('postgraphile')
+const ConnectionFilterPlugin = require("postgraphile-plugin-connection-filter");
 const { NODE_ENV, DATABASE, PG_USER, PASSWORD, HOST, PG_PORT } = process.env
 const dbSchema = 'public'
 const dbUrl = `postgres://${PG_USER}:${PASSWORD}@${HOST}:${PG_PORT}/${DATABASE}`
@@ -9,6 +10,7 @@ const devOptions = {
     watchPg: true,
     graphiql: true,
     enhanceGraphiql: true,
+    appendPlugins: [ConnectionFilterPlugin],
 /*
     subscriptions: true,
     watchPg: true,
@@ -38,7 +40,8 @@ const prodOptions = {
     ignoreRBAC: false,
     ignoreIndexes: false,
     extendedErrors: ["errcode"],
-    appendPlugins: [require("@graphile-contrib/pg-simplify-inflector")],
+    // appendPlugins: [require("@graphile-contrib/pg-simplify-inflector"), ConnectionFilterPlugin],
+    appendPlugins: [ConnectionFilterPlugin],
     graphiql: false,
     enableQueryBatching: true,
     disableQueryLog: true, // our default logging has performance issues, but do make sure you have a logging system in place!

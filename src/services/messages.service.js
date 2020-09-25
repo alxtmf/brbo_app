@@ -135,15 +135,55 @@ class MessagesService {
         }
     }
 
-    async findMessage(status){
+    async getMessagesToSend(statuses){
         try {
             let data = await graphQLClient.request(gql`
                 {
+                    allRegSentMessages(filter: {status: {in: [${statuses}]}}) {
+                        nodes {
+                            idUser
+                            text
+                            status
+                            attachedFile
+                            attachedFileType
+                            attachedFileSize
+                            attachedFileHash
+                            idIncomRequest
+                            settings
+                        }
+                    }                
                 }
             `)
             return data
         } catch (e) {
-            logger.info(`findEventType(${message}) - ` + e)
+            logger.info(`` + e)
+            return false
+        }
+    }
+
+    async getMessengerUserMessageRoutes(idUser){
+        try {
+            let data = await graphQLClient.request(gql`
+                {
+                    allVMessengerUserMessageRoutes(condition: {idUser: "${idUser}"}) {
+                        nodes {
+                                idBot
+                                idUser
+                                idMessenger
+                                idEventType
+                                idTargetSystem
+                                idParentEventType
+                                outerId
+                                userSettings
+                                botName
+                                botSettings
+                        }
+                    }
+                }
+            `)
+            return data
+        } catch (e) {
+            logger.info(`` + e)
             return false
         }
     }
