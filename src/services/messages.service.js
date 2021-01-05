@@ -141,6 +141,7 @@ class MessagesService {
                 {
                     allRegSentMessages(filter: {status: {in: [${statuses}]}}) {
                         nodes {
+                            uuid
                             idUser
                             text
                             status
@@ -166,7 +167,7 @@ class MessagesService {
             let data = await graphQLClient.request(gql`
                 {
                     allVMessengerUserMessageRoutes(condition: {idUser: "${idUser}"}) {
-                        nodes {
+                        nodes {                             
                                 idBot
                                 idUser
                                 idMessenger
@@ -177,6 +178,7 @@ class MessagesService {
                                 userSettings
                                 botName
                                 botSettings
+                                messengerCode
                         }
                     }
                 }
@@ -185,6 +187,32 @@ class MessagesService {
         } catch (e) {
             logger.info(`` + e)
             return false
+        }
+    }
+
+    async setMessageStatus(params){
+        try {
+            if(params) {
+                //update mutation
+                const data = await graphQLClient.request(gql`
+                            mutation {
+                                __typename
+                                updateRegSentMessageByUuid(input: {
+                                    regSentMessagePatch: { status: ${params.status}},
+                                    uuid: "${params.message.uuid}"}) {
+                                    clientMutationId
+                                }
+                            }
+
+                    `
+                )
+                return data.error || 1
+            } else {
+                return 0
+            }
+        } catch(e){
+            logger.info(`deleteSentMessage(${params}) - ` + e)
+            return 0
         }
     }
 }
