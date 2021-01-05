@@ -1,26 +1,32 @@
 const cron = require('node-cron')
 const MessagesService = require('../services/messages.service')
 const { SENT_THRESHOLD, NO_SENT_THRESHOLD } = process.env
+const { logger }= require('./../log')
+//const TelegramBot = require('node-telegram-bot-api')
+
+//const token = process.env.TELEGRAM_ACCESS_TOKEN
+
+//telegramBot = new TelegramBot(token)
 
 //delete sent messages every 1 min.
-module.exports.task = cron.schedule('* */1 * * *', function () {
+module.exports.taskDeleteSentMessages = cron.schedule('* */1 * * *', function () {
 
-    console.log('schedule task: delete sent messages')
+    logger.info('scheduled task: delete sent messages')
 
     // delete SENT MESSAGES
     MessagesService.deleteSentMessages({ threshold: SENT_THRESHOLD })
         .then(result => {
-            console.log(result + ' msgs is deleted')
+            logger.info(result + ' msgs is deleted')
         })
 
     // delete NO SENT MESSAGES
     MessagesService.deleteNoSentMessages({ threshold: NO_SENT_THRESHOLD })
         .then(result => {
-            console.log(result + ' msgs is deleted')
+            logger.info(result + ' msgs is deleted')
         })
 
 }, {
-    scheduled: true,
+    scheduled: false,
     timezone: 'Asia/Irkutsk'
 });
 
@@ -28,27 +34,43 @@ module.exports.task = cron.schedule('* */1 * * *', function () {
 //send to bot every 5 sec.
 module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
 
-    console.log('schedule task: send messages')
+    logger.info('scheduled task: send messages')
 
     MessagesService.getMessagesToSend("0, 2, 3")
         .then(result => {
             result.allRegSentMessages.nodes.forEach(async (node) => {
-                console.log('sending message (to user:' + node.idUser + ', text:' + node.text + ')')
+                logger.info('sending message (to user:' + node.idUser + ', text:' + node.text + ')')
 
                 await MessagesService.getMessengerUserMessageRoutes(node.idUser)
                     .then(async(result)=>{
-                        result.allVMessengerUserMessageRoutes.nodes.forEach(bot=>{
-                            console.log('   send message "' + node.text + '" to bot: ' +bot.botName + ' in messenger: ' + bot.idMessenger)
-                        })
+                        for (const item of result.allVMessengerUserMessageRoutes.nodes) {
+                            // bot.sendMessage(item.idMessenger, node.text)
+                            // bot.sendMessage(-428599075, node.text)
+                            // bot.sendMessage(463388832, node.text)
+                            switch (item.messengerCode) {
+                                case "TELEGRAM":
+/*
+                                    telegramBot.sendMessage(item.outerId, node.text)
+                                        .then(async () => {
+                                            await MessagesService.setMessageStatus({
+                                                message : { uuid: node.uuid },
+                                                status: 1
+                                            });
+
+                                        })
+                                    console.log('   send message "' + node.text + '" to bot: ' +item.botName + ' in messenger: ' + item.idMessenger)
+*/
+                                    break;
+                                case "VIBER":
+                                    break;
+                            }
+                        }
 
                     })
             })
-            console.log(' msgs is sent')
         })
-
-
 }, {
-    scheduled: true,
+    scheduled: false,
     timezone: 'Asia/Irkutsk'
 })
 

@@ -6,24 +6,40 @@ const postgraphile = require('./postgraphile')
 const { logger }= require('./log')
 const routes = require('./routes/index')
 const scheduler = require('./schedules/scheduler')
-const app = express()
+const { bottender } = require('bottender');
 
 const { PORT, NODE_ENV } = process.env
 
-app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(postgraphile)
-app.use("/api", routes)
-
-app.use(function (req, res, next) {
-    res.status(404).send("Not Found")
+const botapp = bottender({
+    dev: process.env.NODE_ENV !== 'production',
 });
 
-scheduler.task.start()
+const handle = botapp.getRequestHandler();
 
-app.listen(PORT, () => {
-    const msg = `Server running on ${NODE_ENV} mode on port ${PORT}`
-    logger.info(msg)
-    console.log(msg)
-})
+botapp.prepare().then(() => {
+
+    const server = express()
+    server.use(cors())
+    server.use(bodyParser.json())
+    server.use(bodyParser.urlencoded({extended: false}))
+    server.use(postgraphile)
+    server.use("/api", routes)
+
+    server.all('*', (req, res) => {
+        return handle(req, res);
+    });
+
+/*
+    server.use(function (req, res, next) {
+        res.status(404).send("Not Found")
+    });
+*/
+
+//    scheduler.taskDeleteSentMessages.start()
+//     scheduler.taskSentMessages.start()
+
+    server.listen(PORT, () => {
+        const msg = `Server running on ${NODE_ENV} mode on port ${PORT}`
+        logger.info(msg)
+    });
+});

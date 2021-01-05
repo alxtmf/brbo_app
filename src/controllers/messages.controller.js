@@ -21,82 +21,6 @@ curl --location --request POST 'localhost:3000/message/send' \
 
 class MessagesController {
 
-/*
-    async function saveMessage(message) {
-        try {
-            //TODO save attachments
-            const data = await graphQLClient.request(gql`
-                        mutation {
-                            __typename
-                            createRegSentMessage(input: {regSentMessage: {
-                                idEventType: "${message.idEventType}",
-                                idTargetSystem: "${message.idTargetSystem}",
-                                uuid: "${uuid.v4()}",
-                                text: "${message.text}",
-                                idUser: "${message.idUser}",
-                                status: 0,
-                                dateCreate: "${new Date().toISOString()}"}}) {
-                                clientMutationId
-                            }
-                        }
-                `
-            )
-            return message
-        } catch (e) {
-            return e
-        }
-    }
-*/
-
-/*
-    async function findIncomRequest(idIncomRequest) {
-        const data = await graphQLClient.request(gql`
-            {
-                allRegIncomRequests(condition: {uuid: "${idIncomRequest}", status: 1}) {
-                    nodes {
-                        uuid
-                    }
-                }
-            }
-        `)
-        /!*
-        {
-          "data": {
-            "allRegIncomRequests": {
-              "nodes": []
-            }
-          }
-        }
-        *!/
-        return data.allRegIncomRequests.nodes.length
-    }
-*/
-
-/*
-    async function saveIncomRequest(idIncomRequest) {
-        try {
-            const isFindIncom = await findIncomRequest(idIncomRequest)
-
-            if (isFindIncom) {
-                const data = await graphQLClient.request(gql`
-                            mutation {
-                                __typename
-                                updateRegIncomRequestByUuid(input: {regIncomRequestPatch: {status: 2}, uuid: "${idIncomRequest}"}) {
-                                    clientMutationId
-                                }
-                            }
-                    `
-                )
-                return Promise.resolve({error: '', data: data})
-            } else {
-                throw "not found incom"
-            }
-        } catch (e) {
-            return Promise.reject({error: e, data: null})
-        }
-    }
-*/
-
     sendMessage(req, res) {
         if (!req.body) return res.sendStatus(400);
 
@@ -133,7 +57,6 @@ class MessagesController {
             res.send(result)
         })
     }
-
 }
 
 module.exports = new MessagesController();
