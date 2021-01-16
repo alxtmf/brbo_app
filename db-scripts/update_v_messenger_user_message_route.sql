@@ -22,10 +22,11 @@ FROM (SELECT mr_1.id_bot,
       WHERE mr_1.is_deleted = false
         AND NOT mr_1.date_activation IS NULL) mr
          JOIN (SELECT mu_1.id_user,
+                      mu_1.id_messenger,
                       mu_1.outer_id,
                       mu_1.settings AS user_settings
                FROM reg_messenger_user mu_1
-               WHERE mu_1.is_deleted = false) mu USING (id_user)
+               WHERE mu_1.is_deleted = false) mu USING (id_user, id_messenger)
          JOIN (SELECT b_1.uuid     AS id_bot,
                       b_1.name     AS bot_name,
                       b_1.settings AS bot_settings

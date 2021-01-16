@@ -3,25 +3,29 @@ const cors = require('cors')
 const express = require('express')
 const bodyParser = require('body-parser')
 const postgraphile = require('./postgraphile')
-const { logger }= require('./log')
 const routes = require('./routes/index')
-const scheduler = require('./schedules/scheduler')
+const { logger }= require('./log')
+// const scheduler = require('./schedules/scheduler')
 const { bottender } = require('bottender');
 
 const { PORT, NODE_ENV } = process.env
 
-const botapp = bottender({
-    dev: process.env.NODE_ENV !== 'production',
+const app = bottender({
+    dev: NODE_ENV !== 'production',
 });
 
-const handle = botapp.getRequestHandler();
+const handle = app.getRequestHandler();
 
-botapp.prepare().then(() => {
+app.prepare().then(() => {
 
     const server = express()
+
+    const verify = (req, _, buf) => {
+        req.rawBody = buf.toString();
+    };
+    server.use(bodyParser.json({ verify }));
+    server.use(bodyParser.urlencoded({ extended: false, verify }));
     server.use(cors())
-    server.use(bodyParser.json())
-    server.use(bodyParser.urlencoded({extended: false}))
     server.use(postgraphile)
     server.use("/api", routes)
 
@@ -38,7 +42,8 @@ botapp.prepare().then(() => {
 //    scheduler.taskDeleteSentMessages.start()
 //     scheduler.taskSentMessages.start()
 
-    server.listen(PORT, () => {
+    server.listen(PORT, err => {
+        if (err) throw err;
         const msg = `Server running on ${NODE_ENV} mode on port ${PORT}`
         logger.info(msg)
     });

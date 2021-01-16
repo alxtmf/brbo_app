@@ -56,11 +56,11 @@ module.exports = {
             signingSecret: process.env.SLACK_SIGNING_SECRET,
         },
         viber: {
-            enabled: false,
+            enabled: true,
             path: '/webhooks/viber',
             accessToken: process.env.VIBER_ACCESS_TOKEN,
             sender: {
-                name: 'xxxx',
+                name: 'broker bot',
             },
         },
     },

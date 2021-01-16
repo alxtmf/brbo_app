@@ -1,4 +1,1 @@
-const bb = require('./src/brbo_bottender/index')
-module.exports = async function App(context){
-    await bb(context)
-}
+module.exports = require('./src/brbo_bottender')
