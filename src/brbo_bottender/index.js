@@ -4,7 +4,7 @@ const UsersService = require('../services/users.service')
 const { logger }= require('../log')
 const { SENT_THRESHOLD, NO_SENT_THRESHOLD, TELEGRAM_ACCESS_TOKEN, VIBER_ACCESS_TOKEN } = process.env
 const { getClient } = require('bottender');
-const { router, telegram, viber, text } = require('bottender/router');
+const { platform, router, telegram, viber, text } = require('bottender/router');
 
 const telegramClient = getClient('telegram')
 const viberClient = getClient('viber')
@@ -12,18 +12,18 @@ const viberClient = getClient('viber')
 //delete sent messages every 1 min.
 module.exports.task = cron.schedule('* */1 * * *', function () {
 
-    console.log('schedule task: delete sent messages')
+    //console.log('schedule task: delete sent messages')
 
     // delete SENT MESSAGES
     MessagesService.deleteSentMessages({ threshold: SENT_THRESHOLD })
         .then(result => {
-            console.log(result + ' msgs is deleted')
+            logger.debug(result + ' msgs is deleted')
         })
 
     // delete NO SENT MESSAGES
     MessagesService.deleteNoSentMessages({ threshold: NO_SENT_THRESHOLD })
         .then(result => {
-            console.log(result + ' msgs is deleted')
+            logger.debug(result + ' msgs is deleted')
         })
 
 }, {
@@ -35,12 +35,12 @@ module.exports.task = cron.schedule('* */1 * * *', function () {
 //send to bot every 5 sec.
 module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
 
-    console.log('schedule task: send messages')
+    //console.log('schedule task: send messages')
 
     MessagesService.getMessagesToSend("0, 2, 3")
         .then(result => {
             result.allRegSentMessages.nodes.forEach(async (node) => {
-                console.log('sending message (to user:' + node.idUser + ', text:' + node.text + ')')
+                logger.info('sending message (to user:' + node.idUser + ', text:' + node.text + ')')
 
                 await MessagesService.getMessengerUserMessageRoutes(node.idUser)
                     .then(async(result)=>{
@@ -155,13 +155,27 @@ async function DefaultAction(context) {
     await context.sendText('Please type "/start" to show the keyboard.');
 }
 
-async function ShowKeyboard(context) {
+async function ShowKeyboard(context, bot_platform) {
     let id = context._session.id.split(':')[1] || '';
+
+    //let eventTypeCode = context._session.code ?
+    let eventTypeCode = null  // test
+
     console.log(id);
     UsersService.findAll(id)
         .then(async (data) => {
             if(id && data.allRegMessengerUsers.nodes.length) {
-                await context.sendText(mainMenu.text, {replyMarkup: mainMenu.replyMarkup});
+                MessagesService.getUserKeyboardData(
+                    data.allRegMessengerUsers.nodes[0].clsUserByIdUser.uuid,
+                    data.allRegMessengerUsers.nodes[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes[0].uuid,
+                    eventTypeCode
+                ).then(async (data) => {
+                    //TODO build and return keyboard
+                    data.allClsEventTypes.nodes.forEach(eventType => {
+                        console.log(eventType.code + ": " + eventType.name)
+                    })
+                    await context.sendText(mainMenu.text, {replyMarkup: mainMenu.replyMarkup}); // test
+                })
             } else {
                 await context.sendText('You are not authorized')
             }
@@ -169,7 +183,6 @@ async function ShowKeyboard(context) {
         .catch(async (err)=> {
             await context.sendText('You are not authorized')
         })
-
 }
 
 async function AnswerKeyboard(context) {
@@ -186,12 +199,24 @@ async function AnswerKeyboard(context) {
     }
 }
 
-module.exports = async function App(context) {
+async function TelegramActions(context){
     return router([
-        text('/start', ShowKeyboard),
+        text('/start', ShowKeyboard(context, 'telegram')),
         telegram.callbackQuery(AnswerKeyboard),
         telegram.any(DefaultAction),
+    ]);
+}
 
+async function ViberActions(context){
+    return router([
+        text('/start', ShowKeyboard(context, 'viber')),
         viber.any(DefaultAction)
+    ]);
+}
+
+module.exports = async function App(context) {
+    return router([
+        platform('telegram', TelegramActions),
+        platform('viber', ViberActions),
     ]);
 };

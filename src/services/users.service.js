@@ -15,8 +15,17 @@ class UsersService {
                             settings
                             clsMessengerByIdMessenger {
                                 name
+                                clsBotsByIdMessenger(condition: {isDeleted: false}) {
+                                    nodes {
+                                        uuid
+                                        code
+                                        name
+                                    }
+                                }
                             }
                             clsUserByIdUser {
+                                uuid
+                                code
                                 identificator
                             }
                         }

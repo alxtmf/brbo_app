@@ -190,6 +190,40 @@ class MessagesService {
         }
     }
 
+    async getUserKeyboardData(idUser, idBot){
+        try {
+            let data = await graphQLClient.request(gql`
+                {
+                    allVMessengerUserMessageRoutes(
+                        condition: {idBot: "${idBot}", idUser: "${idUser}"},
+                        filter: {idParentEventType: {isNull: true}}
+                    ) {
+                        nodes {
+                            idEventType
+                        }
+                    }
+                }            
+            `).then(result => {
+                if(result.allVMessengerUserMessageRoutes.nodes[0]) {
+                    return graphQLClient.request(gql`
+                        {
+                            allClsEventTypes(condition: {uuid: "${result.allVMessengerUserMessageRoutes.nodes[0].idEventType}"}) {
+                                nodes {
+                                    name
+                                    code
+                                }
+                            }
+                        }
+                    `);
+                }
+            })
+            return data
+        } catch (e) {
+            logger.info(`` + e)
+            return false
+        }
+    }
+
     async setMessageStatus(params){
         try {
             if(params) {
