@@ -99,6 +99,17 @@ function generateInlineKeyboard(table) {
     };
 }
 
+function generateEventTypeKeyboard(table) {
+    return {
+        inlineKeyboard: table.map(row =>
+            row.map(cell => ({
+                text: cell.text,
+                callbackData: cell.code,
+            }))
+        ),
+    };
+}
+
 const mainMenu = {
     text: 'This is main menu, please click an option.',
     replyMarkup: generateInlineKeyboard([
@@ -151,6 +162,8 @@ const menuMapping = {
     D: submenuD,
 };
 
+
+
 async function DefaultAction(context) {
     await context.sendText('Please type "/start" to show the keyboard.');
 }
@@ -161,7 +174,7 @@ async function ShowKeyboard(context, bot_platform) {
     //let eventTypeCode = context._session.code ?
     let eventTypeCode = null  // test
 
-    console.log(id);
+    //console.log(context.platform);
     UsersService.findAll(id)
         .then(async (data) => {
             if(id && data.allRegMessengerUsers.nodes.length) {
@@ -171,10 +184,15 @@ async function ShowKeyboard(context, bot_platform) {
                     eventTypeCode
                 ).then(async (data) => {
                     //TODO build and return keyboard
+                    let arr = []
                     data.allClsEventTypes.nodes.forEach(eventType => {
-                        console.log(eventType.code + ": " + eventType.name)
+                        //console.log(eventType.code + ": " + eventType.name)
+                        arr.push(Array.of({code: eventType.code, text: eventType.name}))
                     })
-                    await context.sendText(mainMenu.text, {replyMarkup: mainMenu.replyMarkup}); // test
+
+                    await context.sendText('please click an option',
+                        { replyMarkup: generateEventTypeKeyboard(arr) }
+                    ); // test
                 })
             } else {
                 await context.sendText('You are not authorized')
@@ -201,7 +219,7 @@ async function AnswerKeyboard(context) {
 
 async function TelegramActions(context){
     return router([
-        text('/start', ShowKeyboard(context, 'telegram')),
+        text('/start', ShowKeyboard),
         telegram.callbackQuery(AnswerKeyboard),
         telegram.any(DefaultAction),
     ]);
@@ -209,7 +227,7 @@ async function TelegramActions(context){
 
 async function ViberActions(context){
     return router([
-        text('/start', ShowKeyboard(context, 'viber')),
+        text('/start', ShowKeyboard),
         viber.any(DefaultAction)
     ]);
 }
