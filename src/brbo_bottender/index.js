@@ -168,31 +168,47 @@ async function DefaultAction(context) {
     await context.sendText('Please type "/start" to show the keyboard.');
 }
 
-async function ShowKeyboard(context, bot_platform) {
+function buildTelegramKeyboard(keysArr){
+    let arr = []
+    keysArr.forEach(eventType => {
+        //console.log(eventType.code + ": " + eventType.name)
+        arr.push(Array.of({code: eventType.code, text: eventType.name}))
+    })
+    return generateEventTypeKeyboard(arr)
+}
+
+async function ShowKeyboard(context) {
     let id = context._session.id.split(':')[1] || '';
 
-    //let eventTypeCode = context._session.code ?
-    let eventTypeCode = null  // test
+    //let eventTypeCode = context._session.code || null
 
-    //console.log(context.platform);
     UsersService.findAll(id)
         .then(async (data) => {
             if(id && data.allRegMessengerUsers.nodes.length) {
                 MessagesService.getUserKeyboardData(
                     data.allRegMessengerUsers.nodes[0].clsUserByIdUser.uuid,
                     data.allRegMessengerUsers.nodes[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes[0].uuid,
-                    eventTypeCode
+                    null
                 ).then(async (data) => {
                     //TODO build and return keyboard
-                    let arr = []
-                    data.allClsEventTypes.nodes.forEach(eventType => {
-                        //console.log(eventType.code + ": " + eventType.name)
-                        arr.push(Array.of({code: eventType.code, text: eventType.name}))
-                    })
-
-                    await context.sendText('please click an option',
-                        { replyMarkup: generateEventTypeKeyboard(arr) }
-                    ); // test
+                    if(data) {
+                        if (data.allClsEventTypes.nodes.length) {
+                            if (context.platform === 'telegram') {
+                                await context.sendText('please click an option',
+                                    {replyMarkup: buildTelegramKeyboard(data.allClsEventTypes.nodes)}
+                                )
+                            }
+                            if (context.platform === 'viber') {
+                                // await context.sendText('please click an option',
+                                //     {replyMarkup: buildViberKeyboard(data.allClsEventTypes.nodes)}
+                                // )
+                            }
+                        } else {
+                            await context.sendText(`It is Your final choice is null`);
+                        }
+                    } else {
+                        await context.sendText('You are not authorized')
+                    }
                 })
             } else {
                 await context.sendText('You are not authorized')
@@ -206,7 +222,41 @@ async function ShowKeyboard(context, bot_platform) {
 async function AnswerKeyboard(context) {
     const callbackQuery = context.event.callbackQuery;
     const messageId = callbackQuery.message.messageId;
-    const data = callbackQuery.data;
+    const eventTypeCode = callbackQuery.data;
+
+    const id = context._session.id.split(':')[1] || '';
+
+    UsersService.findAll(id)
+        .then(async (data) => {
+            if(id && data.allRegMessengerUsers.nodes.length) {
+                // build and return keyboard
+                MessagesService.getUserKeyboardData(
+                    data.allRegMessengerUsers.nodes[0].clsUserByIdUser.uuid,
+                    data.allRegMessengerUsers.nodes[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes[0].uuid,
+                    eventTypeCode
+                ).then(async (data) => {
+                    if(data) {
+                        if (context.platform === 'telegram') {
+                            // await context.sendText('please click an option',
+                            //     {replyMarkup: buildTelegramKeyboard(data.allClsEventTypes.nodes)}
+                            // )
+                            await context.editMessageText(messageId, callbackQuery.message.text, {
+                                replyMarkup: buildTelegramKeyboard(data.allClsEventTypes.nodes),
+                            });
+                        }
+                    } else {
+                        //await context.sendText(`Your final choice is ${eventTypeCode}.`);
+                        await context.editMessageText(messageId, `Your final choice is ${eventTypeCode}.`);
+                    }
+                })
+            } else {
+                await context.sendText('You are not authorized')
+            }
+        })
+        .catch(async (err)=> {
+            await context.sendText('You are not authorized')
+        })
+/*
     const menu = menuMapping[data];
     if (menu) {
         await context.editMessageText(messageId, menu.text, {
@@ -215,6 +265,7 @@ async function AnswerKeyboard(context) {
     } else {
         await context.editMessageText(messageId, `Your final choice is ${data}.`);
     }
+*/
 }
 
 async function TelegramActions(context){

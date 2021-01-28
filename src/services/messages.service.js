@@ -135,6 +135,24 @@ class MessagesService {
         }
     }
 
+    async findEventType(idEventType, typ){
+        try {
+            let data = await graphQLClient.request(gql`
+                {
+                    allClsEventTypes(condition: {code: "${idEventType}", type: ${typ}, isDeleted: false}) {
+                        nodes {
+                            uuid
+                        }
+                    }
+                }
+            `)
+            return data
+        } catch (e) {
+            logger.info(`findEventType(${dEventType}, ${type}) - ` + e)
+            return false
+        }
+    }
+
     async getMessagesToSend(statuses){
         try {
             let data = await graphQLClient.request(gql`
@@ -190,37 +208,57 @@ class MessagesService {
         }
     }
 
-    async getUserKeyboardData(idUser, idBot){
+    async getUserKeyboardData(idUser, idBot, idParentEventTypeCode){
         try {
-            let data = await graphQLClient.request(gql`
+            const idEvent = await this.findEventType(idParentEventTypeCode, 1)
+
+            //const gquery = idEvent.allClsEventTypes.nodes.length == 0 ?
+            const gquery = (idParentEventTypeCode == null ?
+                gql`
                 {
                     allVMessengerUserMessageRoutes(
-                        condition: {idBot: "${idBot}", idUser: "${idUser}"},
+                        condition: {idBot: "${idBot}", idUser: "${idUser}", typeEvent: 1 },
                         filter: {idParentEventType: {isNull: true}}
                     ) {
                         nodes {
                             idEventType
                         }
                     }
-                }            
-            `).then(result => {
-                if(result.allVMessengerUserMessageRoutes.nodes[0]) {
-                    return graphQLClient.request(gql`
-                        {
-                            allClsEventTypes(condition: {uuid: "${result.allVMessengerUserMessageRoutes.nodes[0].idEventType}"}) {
-                                nodes {
-                                    name
-                                    code
-                                }
+                }
+            `
+            :
+            gql`
+                {
+                    allVMessengerUserMessageRoutes(
+                        condition: {idBot: "${idBot}", idUser: "${idUser}", idParentEventType: "${idEvent.allClsEventTypes.nodes[0].uuid}", typeEvent: 1 }
+                    ) {
+                        nodes {
+                            idEventType
+                        }
+                    }
+                }
+            `
+            )
+
+            let data = await graphQLClient.request(gquery);
+
+            if(data.allVMessengerUserMessageRoutes.nodes[0]) {
+                return graphQLClient.request(gql`
+                    {
+                        allClsEventTypes(condition: {uuid: "${data.allVMessengerUserMessageRoutes.nodes[0].idEventType}"}) {
+                            nodes {
+                                name
+                                code
                             }
                         }
-                    `);
-                }
-            })
-            return data
+                    }
+                `);
+            } else {
+                return null
+            }
         } catch (e) {
             logger.info(`` + e)
-            return false
+            return null
         }
     }
 
