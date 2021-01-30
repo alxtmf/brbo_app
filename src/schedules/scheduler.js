@@ -1,23 +1,14 @@
 const cron = require('node-cron')
 const MessagesService = require('../services/messages.service')
-const { SENT_THRESHOLD, NO_SENT_THRESHOLD, TELEGRAM_ACCESS_TOKEN } = process.env
-const { TelegramClient } = require('messaging-api-telegram');
-const { ViberClient } = require('messaging-api-viber');
+const { SENT_THRESHOLD, NO_SENT_THRESHOLD, TELEGRAM_ACCESS_TOKEN, VIBER_ACCESS_TOKEN } = process.env
+const { bottender } = require('bottender');
 
-// get authToken from the "edit info" screen of your Public Account.
-const viberClient = new ViberClient({
-    accessToken: 'AUTH_TOKEN',
-    sender: {
-        name: 'Sender',
-    },
-});
-const telegramClient = new TelegramClient({
-    accessToken: TELEGRAM_ACCESS_TOKEN,
-});
-
+// const telegramClient = bottender('telegram')
+// const viberClient = bottender('viber')
+/*
 
 //delete sent messages every 1 min.
-module.exports.task = cron.schedule('* */1 * * *', function () {
+module.exports.task = cron.schedule('* *!/1 * * *', function () {
 
     console.log('schedule task: delete sent messages')
 
@@ -40,7 +31,7 @@ module.exports.task = cron.schedule('* */1 * * *', function () {
 
 
 //send to bot every 5 sec.
-module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
+module.exports.taskSentMessages = cron.schedule('*!/30 * * * * *', function () {
 
     console.log('schedule task: send messages')
 
@@ -82,3 +73,4 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
     timezone: 'Asia/Irkutsk'
 })
 
+*/

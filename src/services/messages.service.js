@@ -135,13 +135,30 @@ class MessagesService {
         }
     }
 
+    async findEventType(idEventType, typ){
+        try {
+            let data = await graphQLClient.request(gql`
+                {
+                    allClsEventTypes(condition: {code: "${idEventType}", type: ${typ}, isDeleted: false}) {
+                        nodes {
+                            uuid
+                        }
+                    }
+                }
+            `)
+            return data
+        } catch (e) {
+            logger.info(`findEventType(${dEventType}, ${type}) - ` + e)
+            return false
+        }
+    }
+
     async getMessagesToSend(statuses){
         try {
             let data = await graphQLClient.request(gql`
                 {
                     allRegSentMessages(filter: {status: {in: [${statuses}]}}) {
                         nodes {
-                            uuid
                             idUser
                             text
                             status
@@ -178,7 +195,6 @@ class MessagesService {
                                 userSettings
                                 botName
                                 botSettings
-                                messengerCode
                         }
                     }
                 }
@@ -187,6 +203,60 @@ class MessagesService {
         } catch (e) {
             logger.info(`` + e)
             return false
+        }
+    }
+
+    async getUserKeyboardData(idUser, idBot, idParentEventTypeCode){
+        try {
+            const idEvent = await this.findEventType(idParentEventTypeCode, 1)
+
+            //const gquery = idEvent.allClsEventTypes.nodes.length == 0 ?
+            const gquery = (idParentEventTypeCode == null ?
+                gql`
+                {
+                    allVMessengerUserMessageRoutes(
+                        condition: {idBot: "${idBot}", idUser: "${idUser}", typeEvent: 1 },
+                        filter: {idParentEventType: {isNull: true}}
+                    ) {
+                        nodes {
+                            idEventType
+                        }
+                    }
+                }
+            `
+            :
+            gql`
+                {
+                    allVMessengerUserMessageRoutes(
+                        condition: {idBot: "${idBot}", idUser: "${idUser}", idParentEventType: "${idEvent.allClsEventTypes.nodes[0].uuid}", typeEvent: 1 }
+                    ) {
+                        nodes {
+                            idEventType
+                        }
+                    }
+                }
+            `
+            )
+
+            let data = await graphQLClient.request(gquery);
+
+            if(data.allVMessengerUserMessageRoutes.nodes[0]) {
+                return graphQLClient.request(gql`
+                    {
+                        allClsEventTypes(condition: {uuid: "${data.allVMessengerUserMessageRoutes.nodes[0].idEventType}"}) {
+                            nodes {
+                                name
+                                code
+                            }
+                        }
+                    }
+                `);
+            } else {
+                return null
+            }
+        } catch (e) {
+            logger.info(`` + e)
+            return null
         }
     }
 
@@ -211,7 +281,7 @@ class MessagesService {
                 return 0
             }
         } catch(e){
-            logger.info(`deleteSentMessage(${params}) - ` + e)
+            logger.info(`setMessageStatus(${params}) - ` + e)
             return 0
         }
     }

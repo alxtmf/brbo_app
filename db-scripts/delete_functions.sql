@@ -15,3 +15,4 @@ as $$
                   and (date(current_timestamp) - date_create::date) > delete_no_sent_messages.threshold RETURNING *
         ) SELECT count(*) FROM deleted;
 $$ language sql volatile strict security definer;
+
