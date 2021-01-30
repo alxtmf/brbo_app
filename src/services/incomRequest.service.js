@@ -32,6 +32,41 @@ class IncomRequestService{
         }
     }
 
+    async findIncomRequestByTargetSystemAndEventType(targetSystemCode, idEventType){
+        try {
+            const idTargetSystem = await graphQLClient.request(gql`
+                {
+                    allClsTargetSystems(condition: {code: "${targetSystemCode}", isDeleted: false}) {
+                        nodes {
+                            uuid
+                        }
+                    }
+                }
+                `
+            )
+
+            const data = await graphQLClient.request(gql`
+                {
+                    allRegIncomRequests(condition: {idTargetSystem: "${idTargetSystem.allClsTargetSystems.nodes[0].uuid}", idEventType: "${idEventType}", status: 0}) {
+                        nodes {
+                            dateCreate
+                            idBot
+                            idEventType
+                            idMessenger
+                            idUser
+                            status
+                            uuid
+                        }
+                    }
+                }
+            `)
+            return data.allRegIncomRequests.nodes
+        } catch (e) {
+            logger.info(`findIncomRequestByTargetSystemAndEventType return not found`)
+            return false
+        }
+    }
+
     async saveIncomRequest(statusIncomRequest, idIncomRequest) {
         try {
             if (await this.findIncomRequest(idIncomRequest)) {

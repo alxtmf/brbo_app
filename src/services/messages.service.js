@@ -136,18 +136,31 @@ class MessagesService {
         }
     }
 
-    async findEventTypeByType(idEventType, typ){
+    async findEventTypeByCodeAndType(code, typ = null){
         try {
-            let data = await graphQLClient.request(gql`
-                {
-                    allClsEventTypes(condition: {code: "${idEventType}", type: ${typ}, isDeleted: false}) {
-                        nodes {
-                            uuid
+            let data = null
+            if(typ) {
+                data = await graphQLClient.request(gql`
+                    {
+                        allClsEventTypes(condition: {code: "${code}", type: ${typ}, isDeleted: false}) {
+                            nodes {
+                                uuid
+                            }
                         }
                     }
-                }
-            `)
-            return data
+                `)
+            } else {
+                data = await graphQLClient.request(gql`
+                    {
+                        allClsEventTypes(condition: {code: "${code}", isDeleted: false}) {
+                            nodes {
+                                uuid
+                            }
+                        }
+                    }
+                `)
+            }
+            return data.allClsEventTypes.nodes
         } catch (e) {
             logger.info(`findEventType(${dEventType}, ${type}) - ` + e)
             return false
@@ -211,7 +224,7 @@ class MessagesService {
 
     async getUserKeyboardData(idUser, idBot, idParentEventTypeCode){
         try {
-            const idEvent = await this.findEventTypeByType(idParentEventTypeCode, 1)
+            const idEvent = await this.findEventTypeByCodeAndType(idParentEventTypeCode, 1)
 
             //const gquery = idEvent.allClsEventTypes.nodes.length == 0 ?
             const gquery = (idParentEventTypeCode == null ?
@@ -231,7 +244,7 @@ class MessagesService {
             gql`
                 {
                     allVMessengerUserMessageRoutes(
-                        condition: {idBot: "${idBot}", idUser: "${idUser}", idParentEventType: "${idEvent.allClsEventTypes.nodes[0].uuid}", typeEvent: 1 }
+                        condition: {idBot: "${idBot}", idUser: "${idUser}", idParentEventType: "${idEvent[0].uuid}", typeEvent: 1 }
                     ) {
                         nodes {
                             idEventType
