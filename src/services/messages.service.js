@@ -83,32 +83,6 @@ class MessagesService {
     }
 
     async findEventTypeByMessage(message){
-        /*
-        {
-          "data": {
-            "allClsEventTypes": {
-              "nodes": [
-                {
-                  "idTargetSystem": "c181923a-e523-11ea-ba17-7085c2f42519",
-                  "clsTargetSystemByIdTargetSystem": {
-                    "regTargetSystemUsersByIdTargetSystem": {
-                      "edges": [
-                        {
-                          "node": {
-                            "idUser": "c961d10f-e523-11ea-ba17-7085c2f42519"
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  "uuid": "c181923e-e523-11ea-ba17-7085c2f42519"
-                }
-              ]
-            }
-          }
-        }
-        */
-
         try {
             let data = await graphQLClient.request(gql`
                 {
@@ -129,7 +103,7 @@ class MessagesService {
                     }
                 }
             `)
-            return data
+            return data.allClsEventTypes.nodes
         } catch (e) {
             logger.error(`findEventType(${message}) - ` + e)
             return false
@@ -187,7 +161,7 @@ class MessagesService {
                     }                
                 }
             `)
-            return data
+            return data.allRegSentMessages.nodes
         } catch (e) {
             logger.info(`` + e)
             return false
@@ -257,7 +231,7 @@ class MessagesService {
             let data = await graphQLClient.request(gquery);
 
             if(data.allVMessengerUserMessageRoutes.nodes[0]) {
-                return graphQLClient.request(gql`
+                const data = graphQLClient.request(gql`
                     {
                         allClsEventTypes(condition: {uuid: "${data.allVMessengerUserMessageRoutes.nodes[0].idEventType}"}) {
                             nodes {
@@ -267,6 +241,7 @@ class MessagesService {
                         }
                     }
                 `);
+                return data.allClsEventTypes.nodes
             } else {
                 return null
             }

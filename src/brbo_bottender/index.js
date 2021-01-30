@@ -2,12 +2,14 @@ const cron = require('node-cron')
 const MessagesService = require('../services/messages.service')
 const UsersService = require('../services/users.service')
 const { logger }= require('../log')
-const { SENT_THRESHOLD, NO_SENT_THRESHOLD, TELEGRAM_ACCESS_TOKEN, VIBER_ACCESS_TOKEN } = process.env
+const { TIMEZONE, SENT_THRESHOLD, NO_SENT_THRESHOLD } = process.env
 const { getClient } = require('bottender');
 const { platform, router, telegram, viber, text } = require('bottender/router');
 
 const telegramClient = getClient('telegram')
 const viberClient = getClient('viber')
+
+// ************************************* SCHEDULE ************************************************************
 
 //delete sent messages every 1 min.
 module.exports.task = cron.schedule('* */1 * * *', function () {
@@ -28,7 +30,7 @@ module.exports.task = cron.schedule('* */1 * * *', function () {
 
 }, {
     scheduled: true,
-    timezone: 'Asia/Irkutsk'
+    timezone: TIMEZONE
 });
 
 
@@ -39,7 +41,7 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
 
     MessagesService.getMessagesToSend("0, 2, 3")
         .then(result => {
-            result.allRegSentMessages.nodes.forEach(async (node) => {
+            result.forEach(async (node) => {
                 logger.info('sending message (to user:' + node.idUser + ', text:' + node.text + ')')
 
                 await MessagesService.getMessengerUserMessageRoutes(node.idUser)
@@ -78,8 +80,11 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
         })
 }, {
     scheduled: true,
-    timezone: 'Asia/Irkutsk'
+    timezone: TIMEZONE
 })
+
+
+//  ******************************************* KEYBOARD **********************************************************
 
 function generateInlineKeyboard(table) {
     return {
@@ -125,18 +130,18 @@ async function ShowKeyboard(context) {
 
     UsersService.findAll(id)
         .then(async (data) => {
-            if(id && data.allRegMessengerUsers.nodes.length) {
+            if(id && data.length) {
                 MessagesService.getUserKeyboardData(
-                    data.allRegMessengerUsers.nodes[0].clsUserByIdUser.uuid,
-                    data.allRegMessengerUsers.nodes[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes[0].uuid,
+                    data[0].clsUserByIdUser.uuid,
+                    data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes[0].uuid,
                     null
-                ).then(async (data) => {
+                ).then(async (result) => {
                     //TODO build and return keyboard
-                    if(data) {
-                        if (data.allClsEventTypes.nodes.length) {
+                    if(result) {
+                        if (result.length) {
                             if (context.platform === 'telegram') {
                                 await context.sendText('please click an option',
-                                    {replyMarkup: buildTelegramKeyboard(data.allClsEventTypes.nodes)}
+                                    {replyMarkup: buildTelegramKeyboard(result)}
                                 )
                             }
                             if (context.platform === 'viber') {
@@ -167,36 +172,30 @@ async function AnswerKeyboard(context) {
 
     const id = context._session.id.split(':')[1] || '';
 
-    UsersService.findAll(id)
-        .then(async (data) => {
-            if(id && data.allRegMessengerUsers.nodes.length) {
-                // build and return keyboard
-                MessagesService.getUserKeyboardData(
-                    data.allRegMessengerUsers.nodes[0].clsUserByIdUser.uuid,
-                    data.allRegMessengerUsers.nodes[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes[0].uuid,
-                    eventTypeCode
-                ).then(async (data) => {
-                    if(data) {
-                        if (context.platform === 'telegram') {
-                            // await context.sendText('please click an option',
-                            //     {replyMarkup: buildTelegramKeyboard(data.allClsEventTypes.nodes)}
-                            // )
-                            await context.editMessageText(messageId, callbackQuery.message.text, {
-                                replyMarkup: buildTelegramKeyboard(data.allClsEventTypes.nodes),
-                            });
-                        }
-                    } else {
-                        //await context.sendText(`Your final choice is ${eventTypeCode}.`);
-                        await context.editMessageText(messageId, `Your final choice is ${eventTypeCode}.`);
-                    }
-                })
+    try {
+        const data = await UsersService.findAll(id)
+        if(id && data.length) {
+            // build and return keyboard
+            const kbData = MessagesService.getUserKeyboardData(
+                data[0].clsUserByIdUser.uuid,
+                data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes[0].uuid,
+                eventTypeCode
+            )
+            if(kbData) {
+                if (context.platform === 'telegram') {
+                    await context.editMessageText(messageId, callbackQuery.message.text, {
+                        replyMarkup: buildTelegramKeyboard(kbData),
+                    });
+                }
             } else {
-                await context.sendText('You are not authorized')
+                await context.editMessageText(messageId, `Your final choice is ${eventTypeCode}.`);
             }
-        })
-        .catch(async (err)=> {
+        } else {
             await context.sendText('You are not authorized')
-        })
+        }
+    } catch(err) {
+        await context.sendText('You are not authorized')
+    }
 }
 
 async function TelegramActions(context){

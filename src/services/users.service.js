@@ -32,7 +32,7 @@ class UsersService {
                     }
                 }
             `)
-            return data
+            return data.allRegMessengerUsers.nodes
         } catch (e) {
             logger.error(`findAll(${outerId}) - ` + e)
             return false

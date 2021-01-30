@@ -81,7 +81,7 @@ class IncomRequestService{
                 )
                 return Promise.resolve({error: '', data: data})
             } else {
-                throw "not found incom"
+                throw "not found incomRequest"
             }
         } catch (e) {
             return Promise.reject({error: e, data: null})
