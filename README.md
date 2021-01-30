@@ -10,4 +10,6 @@ set webhooks:
 
 npx bottender telegram webhook set
 
-npx bottender viber webhook set -w https://fvdfvsdf.ngrok.io
+npx bottender viber webhook set -w https://fvdfvsdf.ngrok.io 
+or 
+npx bottender viber webhook set

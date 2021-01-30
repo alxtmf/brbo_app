@@ -1,13 +1,4 @@
-const uuid = require('uuid');
 const {logger } = require("../log");
-const {GraphQLClient, gql} = require('graphql-request')
-const endpoint = `http://localhost:${process.env.PORT}/graphql`
-const graphQLClient = new GraphQLClient(endpoint )//, {
-//     headers: {
-//         authorization: 'Bearer MY_TOKEN',
-//     },
-// })
-
 const MessageService = require('../services/messages.service')
 const IncomRequestService = require('../services/incomRequest.service')
 /*
@@ -19,7 +10,7 @@ curl --location --request POST 'localhost:3000/message/send' \
 ]}'
  */
 
-class MessagesController {
+class MessageController {
 
     sendMessage(req, res) {
         if (!req.body) return res.sendStatus(400);
@@ -28,15 +19,14 @@ class MessagesController {
 
         const promises = messages.map(async (message) => {
             try {
-                let data = await MessageService.findEventType(message)
-                if (!data || data.allClsEventTypes.nodes[0].uuid == "" && data.allClsEventTypes.nodes[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0) {
+                let data = await MessageService.findEventTypeByMessage(message)
+                if (!data || data[0].uuid == "" && data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0) {
                     throw message
                 } else {
-                    message.idEventType = data.allClsEventTypes.nodes[0].uuid
-                    message.idTargetSystem = data.allClsEventTypes.nodes[0].idTargetSystem
-                    message.idUser = data.allClsEventTypes.nodes[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges[0].node.idUser
+                    message.idEventType = data[0].uuid
+                    message.idTargetSystem = data[0].idTargetSystem
+                    message.idUser = data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges[0].node.idUser
 
-                    //if message.id_incom_request not null
                     if (message.id_incom_request) {
                         await IncomRequestService.saveIncomRequest(2, message.id_incom_request)
                             .then(() => {
@@ -49,6 +39,7 @@ class MessagesController {
                     return await MessageService.createMessage(message)
                 }
             } catch (e) {
+                logger.error(e)
                 throw message
             }
         })
@@ -59,5 +50,5 @@ class MessagesController {
     }
 }
 
-module.exports = new MessagesController();
+module.exports = new MessageController();
 

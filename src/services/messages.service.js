@@ -1,7 +1,8 @@
 const {logger } = require("../log");
 const {GraphQLClient, gql} = require('graphql-request')
 
-const endpoint = `http://localhost:${process.env.PORT}/graphql`
+const { HOST, PORT } = process.env
+const endpoint = `http://${HOST || 'localhost'}:${PORT || 3000}/graphql`
 const graphQLClient = new GraphQLClient(endpoint)
 
 class MessagesService {
@@ -81,33 +82,7 @@ class MessagesService {
         }
     }
 
-    async findEventType(message){
-        /*
-        {
-          "data": {
-            "allClsEventTypes": {
-              "nodes": [
-                {
-                  "idTargetSystem": "c181923a-e523-11ea-ba17-7085c2f42519",
-                  "clsTargetSystemByIdTargetSystem": {
-                    "regTargetSystemUsersByIdTargetSystem": {
-                      "edges": [
-                        {
-                          "node": {
-                            "idUser": "c961d10f-e523-11ea-ba17-7085c2f42519"
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  "uuid": "c181923e-e523-11ea-ba17-7085c2f42519"
-                }
-              ]
-            }
-          }
-        }
-        */
-
+    async findEventTypeByMessage(message){
         try {
             let data = await graphQLClient.request(gql`
                 {
@@ -128,25 +103,38 @@ class MessagesService {
                     }
                 }
             `)
-            return data
+            return data.allClsEventTypes.nodes
         } catch (e) {
-            logger.info(`findEventType(${message}) - ` + e)
+            logger.error(`findEventType(${message}) - ` + e)
             return false
         }
     }
 
-    async findEventType(idEventType, typ){
+    async findEventTypeByCodeAndType(code, typ = null){
         try {
-            let data = await graphQLClient.request(gql`
-                {
-                    allClsEventTypes(condition: {code: "${idEventType}", type: ${typ}, isDeleted: false}) {
-                        nodes {
-                            uuid
+            let data = null
+            if(typ) {
+                data = await graphQLClient.request(gql`
+                    {
+                        allClsEventTypes(condition: {code: "${code}", type: ${typ}, isDeleted: false}) {
+                            nodes {
+                                uuid
+                            }
                         }
                     }
-                }
-            `)
-            return data
+                `)
+            } else {
+                data = await graphQLClient.request(gql`
+                    {
+                        allClsEventTypes(condition: {code: "${code}", isDeleted: false}) {
+                            nodes {
+                                uuid
+                            }
+                        }
+                    }
+                `)
+            }
+            return data.allClsEventTypes.nodes
         } catch (e) {
             logger.info(`findEventType(${dEventType}, ${type}) - ` + e)
             return false
@@ -172,7 +160,7 @@ class MessagesService {
                     }                
                 }
             `)
-            return data
+            return data.allRegSentMessages.nodes
         } catch (e) {
             logger.info(`` + e)
             return false
@@ -208,7 +196,7 @@ class MessagesService {
 
     async getUserKeyboardData(idUser, idBot, idParentEventTypeCode){
         try {
-            const idEvent = await this.findEventType(idParentEventTypeCode, 1)
+            const idEvent = await this.findEventTypeByCodeAndType(idParentEventTypeCode, 1)
 
             //const gquery = idEvent.allClsEventTypes.nodes.length == 0 ?
             const gquery = (idParentEventTypeCode == null ?
@@ -228,7 +216,7 @@ class MessagesService {
             gql`
                 {
                     allVMessengerUserMessageRoutes(
-                        condition: {idBot: "${idBot}", idUser: "${idUser}", idParentEventType: "${idEvent.allClsEventTypes.nodes[0].uuid}", typeEvent: 1 }
+                        condition: {idBot: "${idBot}", idUser: "${idUser}", idParentEventType: "${idEvent[0].uuid}", typeEvent: 1 }
                     ) {
                         nodes {
                             idEventType
@@ -241,7 +229,7 @@ class MessagesService {
             let data = await graphQLClient.request(gquery);
 
             if(data.allVMessengerUserMessageRoutes.nodes[0]) {
-                return graphQLClient.request(gql`
+                const data = graphQLClient.request(gql`
                     {
                         allClsEventTypes(condition: {uuid: "${data.allVMessengerUserMessageRoutes.nodes[0].idEventType}"}) {
                             nodes {
@@ -251,6 +239,7 @@ class MessagesService {
                         }
                     }
                 `);
+                return data.allClsEventTypes.nodes
             } else {
                 return null
             }

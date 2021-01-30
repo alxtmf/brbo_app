@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const postgraphile = require('./postgraphile')
 const routes = require('./routes/index')
 const { logger }= require('./log')
-// const scheduler = require('./schedules/scheduler')
 const { bottender } = require('bottender');
 
 const { PORT, NODE_ENV } = process.env
@@ -32,15 +31,6 @@ app.prepare().then(() => {
     server.all('*', (req, res) => {
         return handle(req, res);
     });
-
-/*
-    server.use(function (req, res, next) {
-        res.status(404).send("Not Found")
-    });
-*/
-
-//    scheduler.taskDeleteSentMessages.start()
-//     scheduler.taskSentMessages.start()
 
     server.listen(PORT, err => {
         if (err) throw err;
