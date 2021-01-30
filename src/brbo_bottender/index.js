@@ -37,45 +37,40 @@ module.exports.task = cron.schedule('* */1 * * *', function () {
 //send to bot every 5 sec.
 module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
 
-    //console.log('schedule task: send messages')
-
     MessagesService.getMessagesToSend("0, 2, 3")
         .then(result => {
             result.forEach(async (node) => {
                 logger.info('sending message (to user:' + node.idUser + ', text:' + node.text + ')')
 
-                await MessagesService.getMessengerUserMessageRoutes(node.idUser)
-                    .then(async(result)=>{
-                        for (const item of result.allVMessengerUserMessageRoutes.nodes) {
-                            switch (item.messengerCode) {
-                                case "TELEGRAM":
-                                    telegramClient.sendMessage(item.outerId, node.text)
-                                        .then(async () => {
-                                            await MessagesService.setMessageStatus({
-                                                message : { uuid: node.uuid },
-                                                status: 1
-                                            });
-                                            logger.info('   sent message "' + node.text + '" to bot: ' +item.botName + ' in messenger: ' + item.idMessenger)
-                                        })
-                                    break;
-                                case "VIBER":
-                                    viberClient.sendText(item.outerId, node.text)
-                                        .then(async () => {
-                                            await MessagesService.setMessageStatus({
-                                                message : { uuid: node.uuid },
-                                                status: 1
-                                            });
-                                            logger.info('   sent message "' + node.text + '" to bot: ' +item.botName + ' in messenger: ' + item.idMessenger)
-                                        })
-                                    break;
-                            }
+                try {
+                    result = await MessagesService.getMessengerUserMessageRoutes(node.idUser)
+                    for (const item of result) {
+                        switch (item.messengerCode) {
+                            case "TELEGRAM":
+                                telegramClient.sendMessage(item.outerId, node.text)
+                                    .then(async () => {
+                                        await MessagesService.setMessageStatus({
+                                            message: {uuid: node.uuid},
+                                            status: 1
+                                        });
+                                        logger.info('   sent message "' + node.text + '" to bot: ' + item.botName + ' in messenger: ' + item.idMessenger)
+                                    })
+                                break;
+                            case "VIBER":
+                                viberClient.sendText(item.outerId, node.text)
+                                    .then(async () => {
+                                        await MessagesService.setMessageStatus({
+                                            message: {uuid: node.uuid},
+                                            status: 1
+                                        });
+                                        logger.info('   sent message "' + node.text + '" to bot: ' + item.botName + ' in messenger: ' + item.idMessenger)
+                                    })
+                                break;
                         }
-
-                    })
-                    .catch(err => {
-                        console.log('error: ' + err)
-                        logger.error(err);
-                    })
+                    }
+                } catch(err){
+                    logger.error(err);
+                }
             })
         })
 }, {
@@ -85,17 +80,6 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
 
 
 //  ******************************************* KEYBOARD **********************************************************
-
-function generateInlineKeyboard(table) {
-    return {
-        inlineKeyboard: table.map(row =>
-            row.map(cell => ({
-                text: cell,
-                callbackData: cell,
-            }))
-        ),
-    };
-}
 
 function generateEventTypeKeyboard(table) {
     return {
@@ -117,7 +101,6 @@ async function DefaultAction(context) {
 function buildTelegramKeyboard(keysArr){
     let arr = []
     keysArr.forEach(eventType => {
-        //console.log(eventType.code + ": " + eventType.name)
         arr.push(Array.of({code: eventType.code, text: eventType.name}))
     })
     return generateEventTypeKeyboard(arr)

@@ -147,6 +147,7 @@ class MessagesService {
                 {
                     allRegSentMessages(filter: {status: {in: [${statuses}]}}) {
                         nodes {
+                            uuid
                             idUser
                             text
                             status
@@ -183,11 +184,12 @@ class MessagesService {
                                 userSettings
                                 botName
                                 botSettings
+                                messengerCode
                         }
                     }
                 }
             `)
-            return data
+            return data.allVMessengerUserMessageRoutes.nodes
         } catch (e) {
             logger.info(`` + e)
             return false
