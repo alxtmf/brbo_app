@@ -1,7 +1,8 @@
 const uuid = require('uuid');
 const {logger } = require("../log");
 const {GraphQLClient, gql} = require('graphql-request')
-const endpoint = `http://localhost:${process.env.PORT}/graphql`
+const { HOST, PORT } = process.env
+const endpoint = `http://${HOST || 'localhost'}:${PORT || 3000}/graphql`
 const graphQLClient = new GraphQLClient(endpoint )//, {
 //     headers: {
 //         authorization: 'Bearer MY_TOKEN',
@@ -19,7 +20,7 @@ curl --location --request POST 'localhost:3000/message/send' \
 ]}'
  */
 
-class MessagesController {
+class MessageController {
 
     sendMessage(req, res) {
         if (!req.body) return res.sendStatus(400);
@@ -28,7 +29,7 @@ class MessagesController {
 
         const promises = messages.map(async (message) => {
             try {
-                let data = await MessageService.findEventType(message)
+                let data = await MessageService.findEventTypeByMessage(message)
                 if (!data || data.allClsEventTypes.nodes[0].uuid == "" && data.allClsEventTypes.nodes[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0) {
                     throw message
                 } else {
@@ -49,6 +50,7 @@ class MessagesController {
                     return await MessageService.createMessage(message)
                 }
             } catch (e) {
+                logger.error(e)
                 throw message
             }
         })
@@ -59,5 +61,5 @@ class MessagesController {
     }
 }
 
-module.exports = new MessagesController();
+module.exports = new MessageController();
 

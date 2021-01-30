@@ -1,7 +1,8 @@
 const {logger } = require("../log");
 const {GraphQLClient, gql} = require('graphql-request')
 
-const endpoint = `http://localhost:${process.env.PORT}/graphql`
+const { HOST, PORT } = process.env
+const endpoint = `http://${HOST || 'localhost'}:${PORT || 3000}/graphql`
 const graphQLClient = new GraphQLClient(endpoint)
 
 class MessagesService {
@@ -81,7 +82,7 @@ class MessagesService {
         }
     }
 
-    async findEventType(message){
+    async findEventTypeByMessage(message){
         /*
         {
           "data": {
@@ -130,12 +131,12 @@ class MessagesService {
             `)
             return data
         } catch (e) {
-            logger.info(`findEventType(${message}) - ` + e)
+            logger.error(`findEventType(${message}) - ` + e)
             return false
         }
     }
 
-    async findEventType(idEventType, typ){
+    async findEventTypeByType(idEventType, typ){
         try {
             let data = await graphQLClient.request(gql`
                 {
@@ -210,7 +211,7 @@ class MessagesService {
 
     async getUserKeyboardData(idUser, idBot, idParentEventTypeCode){
         try {
-            const idEvent = await this.findEventType(idParentEventTypeCode, 1)
+            const idEvent = await this.findEventTypeByType(idParentEventTypeCode, 1)
 
             //const gquery = idEvent.allClsEventTypes.nodes.length == 0 ?
             const gquery = (idParentEventTypeCode == null ?
