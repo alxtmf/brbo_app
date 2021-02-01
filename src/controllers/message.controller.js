@@ -28,14 +28,14 @@ class MessageController {
                     message.idUser = data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges[0].node.idUser
 
                     if (message.id_incom_request) {
-                        await IncomRequestService.saveIncomRequest(2, message.id_incom_request)
-                            .then(() => {
-                                logger.info('message.id_incom_request (' + message.id_incom_request + ') status is set=2')
-                            })
-                            .catch(() => {
-                                logger.error('message.id_incom_request (' + message.id_incom_request + ') error set status')
-                            })
+                        const isUpdated = await IncomRequestService.setIncomRequestStatus(message.id_incom_request, 2)
+                        if(isUpdated){
+                            logger.info('message.id_incom_request (' + message.id_incom_request + ') status is set=2')
+                        } else {
+                            logger.error('message.id_incom_request (' + message.id_incom_request + ') error set status')
+                        }
                     }
+
                     return await MessageService.createMessage(message)
                 }
             } catch (e) {

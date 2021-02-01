@@ -67,9 +67,9 @@ class IncomRequestService{
         }
     }
 
-    async saveIncomRequest(statusIncomRequest, idIncomRequest) {
+    async setIncomRequestStatus(idIncomRequest, statusIncomRequest) {
         try {
-            if (await this.findIncomRequest(idIncomRequest)) {
+            //if (await this.findIncomRequest(idIncomRequest)) {
                 const data = await graphQLClient.request(gql`
                             mutation {
                                 __typename
@@ -79,12 +79,12 @@ class IncomRequestService{
                             }
                     `
                 )
-                return Promise.resolve({error: '', data: data})
-            } else {
-                throw "not found incomRequest"
-            }
+                return data.error || true // Promise.resolve({error: '', data: data})
+//            } else {
+//                throw "not found incomRequest"
+//            }
         } catch (e) {
-            return Promise.reject({error: e, data: null})
+            return false //Promise.reject({error: e, data: null})
         }
     }
 
