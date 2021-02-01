@@ -5,9 +5,15 @@ const { logger }= require('../log')
 const { TIMEZONE, SENT_THRESHOLD, NO_SENT_THRESHOLD } = process.env
 const { getClient } = require('bottender');
 const { platform, router, telegram, viber, text } = require('bottender/router');
+const ngrok = require('../get_public_url')
 
 const telegramClient = getClient('telegram')
 const viberClient = getClient('viber')
+
+ngrok.getPublicUrl().then(url => {
+    telegramClient.setWebhook(url).then(r => console.log('telegram webhook is setting'))
+})
+
 
 // ************************************* SCHEDULE ************************************************************
 

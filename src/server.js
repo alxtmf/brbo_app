@@ -6,6 +6,7 @@ const postgraphile = require('./postgraphile')
 const routes = require('./routes/index')
 const { logger }= require('./log')
 const { bottender } = require('bottender');
+const ngrok = require('ngrok')
 
 const { PORT, NODE_ENV } = process.env
 
@@ -37,4 +38,17 @@ app.prepare().then(() => {
         const msg = `Server running on ${NODE_ENV} mode on port ${PORT}`
         logger.info(msg)
     });
+
+    ngrok.connect({
+        proto : 'http',
+        addr : PORT,
+    }).then(url => {
+        console.log('Tunnel Created -> ', url);
+        console.log('Tunnel Inspector ->  http://127.0.0.1:4040');
+    })
+    .catch(err => {
+        console.error('Error while connecting Ngrok', err);
+        return new Error('Ngrok Failed');
+    })
+
 });
