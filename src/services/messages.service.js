@@ -25,11 +25,11 @@ class MessagesService {
                 `
             ).then(value =>
             //TODO надо чтоб из БД вовращалась полная запись и сделать return data
-                {return res(message)}
+                { return res(message) }
             )
             .catch(reason => {
                 logger.info(`createMessage(${message}) - ` + reason)
-                return false
+                return rej(false)
             })
         })
     }

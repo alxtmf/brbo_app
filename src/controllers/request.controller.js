@@ -14,13 +14,34 @@ class RequestController {
         try {
             const eventType = await MessageService.findEventTypeByCodeAndType(eventTypeCode)
 
-            const data = await IncomRequestService.findIncomRequestByTargetSystemAndEventType(
+            const requests = await IncomRequestService.findIncomRequestByTargetSystemAndEventType(
                 targetSystemCode,
                 eventType[0].uuid
             )
 
-            if(data){
-                res.send(data)
+            if(requests){
+                const promises = requests.map(async (item) => {
+                    try{
+                        return new Promise(async (res, rej) => {
+                            try {
+                                const result = await IncomRequestService.setIncomRequestStatus(item.uuid, 1)
+                                return res(result)
+                            } catch(err){
+                                return rej(err)
+                            }
+                        })
+                    } catch(err){
+                        logger.error(err)
+                        throw item
+                    }
+                })
+
+                Promise.allSettled(promises)
+                    .then((result) => {
+                        res.send(requests)
+                    })
+                    .catch(() => res.send(500))
+
             } else {
                 res.sendStatus(404)
             }
