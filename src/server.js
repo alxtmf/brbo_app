@@ -7,6 +7,10 @@ const routes = require('./routes/index')
 const { logger }= require('./log')
 const { bottender } = require('bottender');
 const ngrok = require('ngrok')
+// const publicUrl = require('./get_public_url')
+// const telegramClient = require('./brbo_bottender')
+const { exec } = require("child_process");
+
 
 const { PORT, NODE_ENV } = process.env
 
@@ -33,22 +37,29 @@ app.prepare().then(() => {
         return handle(req, res);
     });
 
-    server.listen(PORT, err => {
-        if (err) throw err;
-        const msg = `Server running on ${NODE_ENV} mode on port ${PORT}`
-        logger.info(msg)
-    });
-
     ngrok.connect({
         proto : 'http',
         addr : PORT,
     }).then(url => {
         console.log('Tunnel Created -> ', url);
         console.log('Tunnel Inspector ->  http://127.0.0.1:4040');
-    })
-    .catch(err => {
-        console.error('Error while connecting Ngrok', err);
-        return new Error('Ngrok Failed');
-    })
 
+        server.listen(PORT, err => {
+            if (err) throw err;
+            const msg = `Server running on ${NODE_ENV} mode on port ${PORT}`
+            logger.info(msg)
+
+            // publicUrl.getPublicUrl().then(url => {
+            //     console.log(url)
+            //     telegramClient.setWebhook(url).then(() => console.log('telegram webhook is setting'))
+            //     //viberClient.setWebhook(url).then(() => console.log('viber webhook is setting'))
+            // })
+
+        });
+
+    })
+        .catch(err => {
+            console.error('Error while connecting Ngrok', err);
+            return new Error('Ngrok Failed');
+        })
 });
