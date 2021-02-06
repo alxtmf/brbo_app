@@ -2,14 +2,17 @@
 
 Run in dev mode:
 
-ngrok http 3000
-
 npm run serve
 
-set webhooks:
-
-npx bottender telegram webhook set
-
-npx bottender viber webhook set -w https://fvdfvsdf.ngrok.io 
-or 
+set webhooks:\
+npx bottender telegram webhook set \
 npx bottender viber webhook set
+
+Or run in deamon mode:
+
+pm2 start src/server.js
+
+npx bottender telegram webhook set \
+npx bottender viber webhook set
+
+

@@ -7,12 +7,11 @@ const routes = require('./routes/index')
 const { logger }= require('./log')
 const { bottender } = require('bottender');
 const ngrok = require('ngrok')
-// const publicUrl = require('./get_public_url')
-// const telegramClient = require('./brbo_bottender')
-const { exec } = require("child_process");
-
 
 const { PORT, NODE_ENV } = process.env
+
+// const telegramClient = getClient('telegram')
+// const viberClient = getClient('viber')
 
 const app = bottender({
     dev: NODE_ENV !== 'production',
@@ -48,6 +47,14 @@ app.prepare().then(() => {
             if (err) throw err;
             const msg = `Server running on ${NODE_ENV} mode on port ${PORT}`
             logger.info(msg)
+
+            // telegramClient.setWebhook(url).then(result => {
+            //     logger.info('telegram webhook set successfully')
+            // })
+            // viberClient.setWebhook(url).then(result => {
+            //     logger.info('viber webhook set successfully')
+            // })
+
 
             // publicUrl.getPublicUrl().then(url => {
             //     console.log(url)

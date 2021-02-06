@@ -5,16 +5,9 @@ const { logger }= require('../log')
 const { TIMEZONE, SENT_THRESHOLD, NO_SENT_THRESHOLD } = process.env
 const { getClient } = require('bottender');
 const { platform, router, telegram, viber, text } = require('bottender/router');
-// const publicUrl = require('../get_public_url')
 
 const telegramClient = getClient('telegram')
 const viberClient = getClient('viber')
-
-// publicUrl.getPublicUrl().then(url => {
-//     console.log(url)
-//     telegramClient.setWebhook(url).then(() => console.log('telegram webhook is setting'))
-//     viberClient.setWebhook(url).then(() => console.log('viber webhook is setting'))
-// })
 
 
 // ************************************* SCHEDULE ************************************************************
@@ -100,9 +93,21 @@ function generateEventTypeKeyboard(table) {
     };
 }
 
-async function DefaultAction(context) {
+async function TelegramDefaultAction(context) {
     if(context.event.isMessage) {
-        await context.sendText('Please type "/start" to show the keyboard.');
+        const user = context.event.message.from || 'user'
+        console.log('message from telegram client - id:' + user.id + ', username: ' + user.username)
+        logger.info('telegram client id:' + user.id + ', username: ' + user.username);
+        await context.sendText('Hi, ' + user.firstName + '! Please type "/start" to show the keyboard.');
+    }
+}
+
+async function ViberDefaultAction(context) {
+    if(context.event.isMessage) {
+        const user = context.event._rawEvent.sender || 'user'
+        console.log("message from viber client - id:  " + user.id + ", name: " + user.name)
+        logger.info("viber client user.id:  " + user.id + ", user.name: " + user.name)
+        await context.sendText('Hi, '+user.name+'! Please type "/start" to show the keyboard.');
     }
 }
 
@@ -193,16 +198,19 @@ async function TelegramActions(context){
     return router([
         text('/start', ShowKeyboard),
         telegram.callbackQuery(AnswerKeyboard),
-        telegram.any(DefaultAction),
+        telegram.any(TelegramDefaultAction),
     ]);
 }
 
 async function ViberActions(context){
     return router([
         text('/start', ShowKeyboard),
-        viber.any(DefaultAction)
+        viber.any(ViberDefaultAction)
     ]);
 }
+
+module.exports.telegramClient = telegramClient
+module.exports.viberClient = viberClient
 
 module.exports = async function App(context) {
     return router([

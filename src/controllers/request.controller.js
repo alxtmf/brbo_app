@@ -12,12 +12,20 @@ class RequestController {
         const eventTypeCode = req.body.event_type_code || null
 
         try {
-            const eventType = await MessageService.findEventTypeByCodeAndType(eventTypeCode)
+            let requests = null
+            if(eventTypeCode) {
+                const eventType = await MessageService.findEventTypeByCodeAndType(eventTypeCode)
 
-            const requests = await IncomRequestService.findIncomRequestByTargetSystemAndEventType(
-                targetSystemCode,
-                eventType[0].uuid
-            )
+                requests = await IncomRequestService.findIncomRequestByTargetSystemAndEventType(
+                    targetSystemCode,
+                    eventType[0].uuid
+                )
+            } else {
+                requests = await IncomRequestService.findIncomRequestByTargetSystemAndEventType(
+                    targetSystemCode,
+                    ''
+                )
+            }
 
             if(requests){
                 const promises = requests.map(async (item) => {
