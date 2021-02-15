@@ -8,9 +8,11 @@ set webhooks:\
 npx bottender telegram webhook set \
 npx bottender viber webhook set
 
-Or run in deamon mode:
+Or run as deamon:
 
-pm2 start src/server.js
+start: pm2 start src/server.js \
+stop: pm2 stop src/server.js \
+restart: pm2 restart src/server.js \
 
 npx bottender telegram webhook set \
 npx bottender viber webhook set

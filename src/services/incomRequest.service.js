@@ -27,7 +27,7 @@ class IncomRequestService{
             */
             return data.allRegIncomRequests.nodes.length
         } catch (e) {
-            logger.info(`findIncomRequest(${idIncomRequest}) not found`)
+            logger.error(`IncomRequestService.findIncomRequest(${idIncomRequest}) not found`)
             return false
         }
     }
@@ -62,7 +62,7 @@ class IncomRequestService{
             `)
             return data.allRegIncomRequests.nodes
         } catch (e) {
-            logger.info(`findIncomRequestByTargetSystemAndEventType return not found`)
+            logger.error(`IncomRequestService.findIncomRequestByTargetSystemAndEventType return not found`)
             return false
         }
     }
@@ -84,6 +84,7 @@ class IncomRequestService{
 //                throw "not found incomRequest"
 //            }
         } catch (e) {
+            logger.error(`IncomRequestService.setIncomRequestStatus(): ` + e)
             return false //Promise.reject({error: e, data: null})
         }
     }

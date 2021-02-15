@@ -8,7 +8,7 @@ const graphQLClient = new GraphQLClient(endpoint)
 class MessagesService {
 
     createMessage(message){
-        return new Promise(async (res, rej) => {
+        return new Promise(async (resolve, reject) => {
             await graphQLClient.request(gql`
                         mutation {
                             __typename
@@ -25,11 +25,11 @@ class MessagesService {
                 `
             ).then(value =>
             //TODO надо чтоб из БД вовращалась полная запись и сделать return data
-                { return res(message) }
+                { return resolve(message) }
             )
             .catch(reason => {
-                logger.info(`createMessage(${message}) - ` + reason)
-                return rej(false)
+                logger.error(`messageService.createMessage(): ` + reason)
+                return reject(false)
             })
         })
     }
@@ -54,7 +54,7 @@ class MessagesService {
                 return 0
             }
         } catch(e){
-            logger.info(`deleteNoSentMessage(${params}) - ` + e)
+            logger.error(`messageService.deleteNoSentMessage(): ` + e.toString())
             return 0
         }
     }
@@ -77,7 +77,7 @@ class MessagesService {
                 return 0
             }
         } catch(e){
-            logger.info(`deleteSentMessage(${params}) - ` + e)
+            logger.error(`messageService.deleteSentMessage(): ` + e)
             return 0
         }
     }
@@ -105,7 +105,7 @@ class MessagesService {
             `)
             return data.allClsEventTypes.nodes
         } catch (e) {
-            logger.error(`findEventType(${message}) - ` + e)
+            logger.error(`messageService.findEventType(${message}) - ` + e)
             return false
         }
     }
@@ -136,7 +136,7 @@ class MessagesService {
             }
             return data.allClsEventTypes.nodes
         } catch (e) {
-            logger.info(`findEventType(${dEventType}, ${type}) - ` + e)
+            logger.error(`messageService.findEventType(${dEventType}, ${type}) - ` + e)
             return false
         }
     }
@@ -163,7 +163,7 @@ class MessagesService {
             `)
             return data.allRegSentMessages.nodes
         } catch (e) {
-            logger.info(`` + e)
+            logger.error(`messageService.getMessagesToSend` + e)
             return false
         }
     }
@@ -191,7 +191,7 @@ class MessagesService {
             `)
             return data.allVMessengerUserMessageRoutes.nodes
         } catch (e) {
-            logger.info(`` + e)
+            logger.error(`messageService.getMessengerUserMessageRoutes():` + e)
             return false
         }
     }
@@ -246,7 +246,7 @@ class MessagesService {
                 return null
             }
         } catch (e) {
-            logger.info(`` + e)
+            logger.error(`messageService.getUserKeyboardData(): ` + e)
             return null
         }
     }
@@ -272,7 +272,7 @@ class MessagesService {
                 return 0
             }
         } catch(e){
-            logger.info(`setMessageStatus(${params}) - ` + e)
+            logger.error(`messageService.setMessageStatus(): ` + e)
             return 0
         }
     }
