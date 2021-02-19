@@ -1,138 +1,51 @@
-const cron = require('node-cron')
-const MessagesService = require('../services/messages.service')
-const UsersService = require('../services/users.service')
 const BotsService = require('../services/bots.service')
 const { logger }= require('../log')
-const { TIMEZONE, SENT_THRESHOLD, NO_SENT_THRESHOLD } = process.env
-//const { getClient } = require('bottender');
-const { platform, router, telegram, viber, text } = require('bottender/router');
-const { TELEGRAM_ACCESS_TOKEN } = process.env
-
-//const telegramClient = getClient('telegram')
-//const viberClient = getClient('viber')
-//const telegramClient = require('../server')
-
 const { TelegramClient } = require('messaging-api-telegram');
 const { ViberClient } = require('messaging-api-viber');
+const { botList } = require('./botlist')
 
-const telegramClient = new TelegramClient({
-    accessToken: TELEGRAM_ACCESS_TOKEN,
-});
-
-let botList = new Map();
+// ************************************* CREATE BOT LIST ************************************************************
 
 module.exports.createBotList = function(public_url) {
-    BotsService.findAll()
-        .then(bots => {
-            bots.forEach(bot => {
-                let client = {
-                    id: bot.uuid,
-                    code: bot.code,
-                    name: bot.name,
-                    messenger: bot.clsMessengerByIdMessenger.code,
-                    bot: null
-                };
-                switch (bot.clsMessengerByIdMessenger.code) {
-                    case 'TELEGRAM':
-                        client.bot = new TelegramClient({
-                            accessToken: JSON.parse(bot.settings).access_token,
-                        });
-                        break;
-                    case 'VIBER':
-                        client.bot = new ViberClient({
-                            accessToken: JSON.parse(bot.settings).access_token,
-                        });
-                }
-                if (client.bot) {
-                    client.bot.setWebhook(public_url)
-                        .then((result) => logger.info('set webhook success'))
-                        .catch(()=> logger.info('set webhook - error'))
-                    //botList.push(client)
-                    botList.set(client.id, client)
-                }
-            })
-        })
-        .catch(() => {
-            logger.error('error get data from clsBot')
-        })
-    return botList
-}
-// ************************************* SCHEDULE ************************************************************
-
-//delete sent messages every 1 min.
-module.exports.task = cron.schedule('* */1 * * *', function () {
-
-    //console.log('schedule task: delete sent messages')
-
-    // delete SENT MESSAGES
-    MessagesService.deleteSentMessages({ threshold: SENT_THRESHOLD })
-        .then(result => {
-            logger.debug(result + ' msgs is deleted')
-        })
-
-    // delete NO SENT MESSAGES
-    MessagesService.deleteNoSentMessages({ threshold: NO_SENT_THRESHOLD })
-        .then(result => {
-            logger.debug(result + ' msgs is deleted')
-        })
-
-}, {
-    scheduled: true,
-    timezone: TIMEZONE
-});
-
-
-//send to bot every 5 sec.
-module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
-
-    botList.forEach(bot => console.log(bot))
-
-
-    MessagesService.getMessagesToSend("0, 2, 3")
-        .then(result => {
-            result.forEach(async (node) => {
-                logger.info('sending message (to user:' + node.idUser + ', text:' + node.text + ')')
-
-                try {
-                    result = await MessagesService.getMessengerUserMessageRoutes(node.idUser)
-                    for (const item of result) {
-                        switch (item.messengerCode) {
-                            case "TELEGRAM":
-                                let bot = botList.get(item.idBot)
-                                console.log(bot.name + ', ' + bot.bot.token)
-                                //const msg = await telegramClient.sendMessage(item.outerId, node.text)
-                                const msg = await bot.bot.sendMessage(item.outerId, node.text)
-                                if(msg){
-                                    await MessagesService.setMessageStatus({
-                                        message: {uuid: node.uuid},
-                                        status: 1
-                                    });
-                                    logger.info('   sent message "' + node.text + '" to bot: ' + item.botName + ' in messenger: ' + item.idMessenger)
-                                }
-                                break;
-/*
-                            case "VIBER":
-                                viberClient.sendText(item.outerId, node.text)
-                                    .then(async () => {
-                                        await MessagesService.setMessageStatus({
-                                            message: {uuid: node.uuid},
-                                            status: 1
-                                        });
-                                        logger.info('   sent message "' + node.text + '" to bot: ' + item.botName + ' in messenger: ' + item.idMessenger)
-                                    })
-                                break;
-*/
-                        }
+    return new Promise((resolve, reject) => {
+        BotsService.findAll()
+            .then(bots => {
+                bots.forEach(bot => {
+                    let client = {
+                        id: bot.uuid,
+                        code: bot.code,
+                        name: bot.name,
+                        messenger: bot.clsMessengerByIdMessenger.code,
+                        bot: null
+                    };
+                    switch (bot.clsMessengerByIdMessenger.code) {
+                        case 'TELEGRAM':
+                            client.bot = new TelegramClient({
+                                accessToken: JSON.parse(bot.settings).access_token,
+                            });
+                            break;
+                        case 'VIBER':
+                            client.bot = new ViberClient({
+                                accessToken: JSON.parse(bot.settings).access_token,
+                            });
                     }
-                } catch(err){
-                    logger.error(err);
-                }
+                    if (client.bot) {
+                        client.bot.setWebhook(public_url)
+                            .then((result) => logger.info('set webhook success'))
+                            .catch(()=> logger.info('set webhook - error'))
+                        botList.set(client.id, client)
+                    }
+                })
+
+                resolve(botList)
             })
-        })
-}, {
-    scheduled: true,
-    timezone: TIMEZONE
-})
+            .catch((err) => {
+                const errMsg = 'error get data from clsBot: ' + err
+                logger.error(errMsg)
+                reject(errMsg)
+            })
+    })
+}
 
 
 //  ******************************************* KEYBOARD **********************************************************
