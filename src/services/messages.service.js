@@ -265,7 +265,6 @@ class MessagesService {
                                     clientMutationId
                                 }
                             }
-
                     `
                 )
                 return data.error || 1

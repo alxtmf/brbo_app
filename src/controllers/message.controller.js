@@ -20,8 +20,8 @@ class MessageController {
         const promises = messages.map(async (message) => {
             try {
                 let data = await MessageService.findEventTypeByMessage(message)
-                if (!data || data[0].uuid == "" && data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0) {
-                    throw message
+                if (!data || data[0].uuid == "" || data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0) {
+                    throw `not found route | not found eventTypes | user not found`
                 } else {
                     message.idEventType = data[0].uuid
                     message.idTargetSystem = data[0].idTargetSystem
@@ -39,8 +39,8 @@ class MessageController {
                     return await MessageService.createMessage(message)
                 }
             } catch (e) {
-                logger.error(e)
-                throw message
+                logger.error(`sendMessage error: ${e}`)
+                throw `sendMessage error: ${e}`
             }
         })
 

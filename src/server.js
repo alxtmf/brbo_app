@@ -27,8 +27,8 @@ ngrok.connect({
     addr : PORT,
 })
     .then(url => {
-        console.log('Tunnel Created -> ', url);
-        console.log('Tunnel Inspector ->  http://127.0.0.1:4040');
+        logger.info('Tunnel Created -> ', url);
+        logger.info('Tunnel Inspector ->  http://127.0.0.1:4040');
 
         server.listen(PORT, err => {
             if (err) throw err;

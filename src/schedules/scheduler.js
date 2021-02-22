@@ -1,5 +1,6 @@
 const cron = require('node-cron')
 const MessagesService = require('../services/messages.service')
+const IncomRequestService = require('../services/incomRequest.service')
 const { logger }= require('../log')
 const { TIMEZONE, SENT_THRESHOLD, NO_SENT_THRESHOLD } = process.env
 const { botList } = require('../bots/botlist')
@@ -58,7 +59,10 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
                             message: {uuid: node.uuid},
                             status: 1
                         });
-                        logger.info(`sent message successful`)
+                        if(node.idIncomRequest && node.idIncomRequest != 0) {
+                            await IncomRequestService.setIncomRequestStatus(node.idIncomRequest, 3)
+                        }
+                        logger.info(`sent message successfuly`)
                     } else {
                         await MessagesService.setMessageStatus({
                             message: {uuid: node.uuid},
