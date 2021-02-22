@@ -18,19 +18,22 @@ module.exports.createBotList = function(public_url) {
                         messenger: bot.clsMessengerByIdMessenger.code,
                         bot: null
                     };
+                    let path;
                     switch (bot.clsMessengerByIdMessenger.code) {
                         case 'TELEGRAM':
                             client.bot = new TelegramClient({
                                 accessToken: JSON.parse(bot.settings).access_token,
                             });
+                            path = '/webhooks/telegram'
                             break;
                         case 'VIBER':
                             client.bot = new ViberClient({
                                 accessToken: JSON.parse(bot.settings).access_token,
                             });
+                            path = '/webhooks/viber'
                     }
                     if (client.bot) {
-                        client.bot.setWebhook(public_url)
+                        client.bot.setWebhook(public_url + path)
                             .then((result) => logger.info('set webhook success'))
                             .catch((err)=> logger.info(`set webhook - error: ${err}`))
                         botList.set(client.id, client)
