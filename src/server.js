@@ -42,6 +42,7 @@ ngrok.connect({
                 .catch((err) => {
                     logger.error(err)
                 })
+
             taskSentMessages.start()
             taskDeleteSentMessages.start()
         })

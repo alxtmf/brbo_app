@@ -149,6 +149,7 @@ class MessagesService {
                         nodes {
                             uuid
                             idUser
+                            idEventType
                             text
                             status
                             attachedFile
@@ -168,11 +169,11 @@ class MessagesService {
         }
     }
 
-    async getMessengerUserMessageRoutes(idUser){
+    async getMessengerUserMessageRoutes(idUser, idEventType){
         try {
             let data = await graphQLClient.request(gql`
                 {
-                    allVMessengerUserMessageRoutes(condition: {idUser: "${idUser}"}) {
+                    allVMessengerUserMessageRoutes(condition: {idUser: "${idUser}", idEventType: "${idEventType}"}) {
                         nodes {                             
                                 idBot
                                 idUser

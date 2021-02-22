@@ -32,7 +32,7 @@ module.exports.createBotList = function(public_url) {
                     if (client.bot) {
                         client.bot.setWebhook(public_url)
                             .then((result) => logger.info('set webhook success'))
-                            .catch(()=> logger.info('set webhook - error'))
+                            .catch((err)=> logger.info(`set webhook - error: ${err}`))
                         botList.set(client.id, client)
                     }
                 })
