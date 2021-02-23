@@ -1,5 +1,6 @@
 const {logger } = require("../log");
 const {GraphQLClient, gql} = require('graphql-request')
+const EventTypeService = require('./eventTypes.service')
 
 const { PORT } = process.env
 const endpoint = `http://localhost:${PORT || 3000}/graphql`
@@ -7,7 +8,7 @@ const graphQLClient = new GraphQLClient(endpoint)
 
 class MessagesService {
 
-    createMessage(message){
+    addMessage(message){
         return new Promise(async (resolve, reject) => {
             await graphQLClient.request(gql`
                         mutation {
@@ -28,7 +29,7 @@ class MessagesService {
                 { return resolve(message) }
             )
             .catch(reason => {
-                logger.error(`messageService.createMessage(): ` + reason)
+                logger.error(`messageService.addMessage(): ` + reason)
                 return reject(false)
             })
         })
@@ -110,37 +111,6 @@ class MessagesService {
         }
     }
 
-    async findEventTypeByCodeAndType(code, typ = null){
-        try {
-            let data = null
-            if(typ) {
-                data = await graphQLClient.request(gql`
-                    {
-                        allClsEventTypes(condition: {code: "${code}", type: ${typ}, isDeleted: false}) {
-                            nodes {
-                                uuid
-                            }
-                        }
-                    }
-                `)
-            } else {
-                data = await graphQLClient.request(gql`
-                    {
-                        allClsEventTypes(condition: {code: "${code}", isDeleted: false}) {
-                            nodes {
-                                uuid
-                            }
-                        }
-                    }
-                `)
-            }
-            return data.allClsEventTypes.nodes
-        } catch (e) {
-            logger.error(`messageService.findEventType(${dEventType}, ${type}) - ` + e)
-            return false
-        }
-    }
-
     async getMessagesToSend(statuses){
         try {
             let data = await graphQLClient.request(gql`
@@ -199,7 +169,7 @@ class MessagesService {
 
     async getUserKeyboardData(idUser, idBot, idParentEventTypeCode){
         try {
-            const idEvent = await this.findEventTypeByCodeAndType(idParentEventTypeCode, 1)
+            const idEvent = await EventTypeService.findEventTypeByCodeAndType(idParentEventTypeCode, 1)
 
             //const gquery = idEvent.allClsEventTypes.nodes.length == 0 ?
             const gquery = (idParentEventTypeCode == null ?

@@ -12,7 +12,7 @@ curl --location --request POST 'localhost:3000/message/send' \
 
 class MessageController {
 
-    sendMessage(req, res) {
+    createMessage(req, res) {
         if (!req.body) return res.sendStatus(400);
 
         const messages = req.body.messages
@@ -36,11 +36,11 @@ class MessageController {
                         }
                     }
 
-                    return await MessageService.createMessage(message)
+                    return await MessageService.addMessage(message)
                 }
             } catch (e) {
-                logger.error(`sendMessage error: ${e}`)
-                throw `sendMessage error: ${e}`
+                logger.error(`createMessage error: ${e}`)
+                throw `createMessage error: ${e}`
             }
         })
 

@@ -4,32 +4,27 @@ const {GraphQLClient, gql} = require('graphql-request')
 const endpoint = `http://localhost:${process.env.PORT}/graphql`
 const graphQLClient = new GraphQLClient(endpoint)
 
-class BotsService {
+class TargetSystemService {
 
-    async findAll(){
+    async findTargetSystemByCode(targetSystemCode){
         try {
             let data = await graphQLClient.request(gql`
                 {
-                    allClsBots(condition: {isDeleted: false}) {
+                    allClsTargetSystems(condition: {code: "${targetSystemCode}"}) {
                         nodes {
                             uuid
                             code
-                            clsMessengerByIdMessenger {
-                                code
-                            }
                             name
-                            settings
-                            isDeleted
                         }
                     }
                 }
             `)
-            return Promise.resolve(data.allClsBots.nodes)
+            return data.allClsTargetSystems.nodes
         } catch (e) {
-            logger.error(`BotsService.findAll() - ` + e)
-            return Promise.reject(`BotsService.findAll() - ` + e)
+            logger.error(`targetSystemService.findTargetSystemByCode - ` + e)
+            return false
         }
     }
 }
 
-module.exports = new BotsService();
+module.exports = new TargetSystemService()
