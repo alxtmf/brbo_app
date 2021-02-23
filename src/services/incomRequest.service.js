@@ -113,6 +113,77 @@ class IncomRequestService{
     }
 
 
+    //удаление запросов
+    async deleteSentRequests(params){
+        try {
+            if(params) {
+                //delete mutation
+                const data = await graphQLClient.request(gql`
+                            mutation {
+                                __typename
+                                deleteSentRequests(input: { threshold: ${params.threshold} }){
+                                    bigInt
+                                }
+                            }
+                    `
+                )
+                return data.deleteSentRequests.bigInt
+            } else {
+                return 0
+            }
+        } catch(e){
+            logger.error(`incomRequestService.deleteSentRequests(): ` + e.toString())
+            return 0
+        }
+    }
+
+    async deleteNoSentRequests(params){
+        try {
+            if(params) {
+                //delete mutation
+                const data = await graphQLClient.request(gql`
+                            mutation {
+                                __typename
+                                deleteNoSentRequests(input: { threshold: ${params.threshold} }){
+                                    bigInt
+                                }
+                            }
+                    `
+                )
+                return data.deleteNoSentMessages.bigInt
+            } else {
+                return 0
+            }
+        } catch(e){
+            logger.error(`incomRequestService.deleteNoSentMessage(): ` + e.toString())
+            return 0
+        }
+    }
+
+    async deleteReadRequests(params){
+        try {
+            if(params) {
+                //delete mutation
+                const data = await graphQLClient.request(gql`
+                            mutation {
+                                __typename
+                                deleteReadRequests(input: { threshold: ${params.threshold} }){
+                                    bigInt
+                                }
+                            }
+                    `
+                )
+                return data.deleteNoSentMessages.bigInt
+            } else {
+                return 0
+            }
+        } catch(e){
+            logger.error(`incomRequestService.deleteNoSentMessage(): ` + e.toString())
+            return 0
+        }
+    }
+
+
 }
 
 module.exports = new IncomRequestService();

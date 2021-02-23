@@ -2,20 +2,38 @@ const cron = require('node-cron')
 const MessagesService = require('../services/messages.service')
 const IncomRequestService = require('../services/incomRequest.service')
 const { logger }= require('../log')
-const { TIMEZONE, SENT_THRESHOLD, NO_SENT_THRESHOLD } = process.env
+const { TIMEZONE, MSG_SENT_THRESHOLD, MSG_NO_SENT_THRESHOLD, REQ_SENT_THRESHOLD, REQ_NO_SENT_THRESHOLD, REQ_READ_THRESHOLD } = process.env
 const { botList } = require('../bots/botlist')
 
-//check delete sent messages every 1 min.
-module.exports.taskDeleteSentMessages = cron.schedule('* */1 * * *', function () {
+//check delete sent messages every 1 day.
+module.exports.taskDeleteSentMessages = cron.schedule('* * */6 * *', function () {
 
     // delete SENT MESSAGES
-    MessagesService.deleteSentMessages({ threshold: SENT_THRESHOLD })
+    MessagesService.deleteSentMessages({ threshold: MSG_SENT_THRESHOLD })
         .then(result => {
             logger.debug(result + ' msgs is deleted')
         })
 
     // delete NO SENT MESSAGES
-    MessagesService.deleteNoSentMessages({ threshold: NO_SENT_THRESHOLD })
+    MessagesService.deleteNoSentMessages({ threshold: MSG_NO_SENT_THRESHOLD })
+        .then(result => {
+            logger.debug(result + ' msgs is deleted')
+        })
+
+    // delete SENT REQUESTS
+    IncomRequestService.deleteSentRequests({ threshold: REQ_SENT_THRESHOLD })
+        .then(result => {
+            logger.debug(result + ' msgs is deleted')
+        })
+
+    // delete NO SENT REQUESTS
+    IncomRequestService.deleteNoSentRequests({ threshold: REQ_NO_SENT_THRESHOLD })
+        .then(result => {
+            logger.debug(result + ' msgs is deleted')
+        })
+
+    // delete READ REQUESTS
+    IncomRequestService.deleteReadRequests({ threshold: REQ_READ_THRESHOLD })
         .then(result => {
             logger.debug(result + ' msgs is deleted')
         })
