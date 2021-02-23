@@ -1,6 +1,6 @@
 const {logger } = require("../log");
 
-const MessageService = require('../services/messages.service')
+const EventTypeService = require('../services/eventTypes.service')
 const IncomRequestService = require('../services/incomRequest.service')
 
 class RequestController {
@@ -14,7 +14,7 @@ class RequestController {
         try {
             let requests = null
             if(eventTypeCode) {
-                const eventType = await MessageService.findEventTypeByCodeAndType(eventTypeCode)
+                const eventType = await EventTypeService.findEventTypeByCodeAndType(eventTypeCode)
 
                 requests = await IncomRequestService.findIncomRequestByTargetSystemAndEventType(
                     targetSystemCode,

@@ -89,6 +89,30 @@ class IncomRequestService{
         }
     }
 
+    async addIncomRequest(params){
+        try{
+            const result = await graphQLClient.request(gql`
+                mutation {
+                    __typename
+                    createRegIncomRequest(input: {regIncomRequest: {
+                        idBot: "${params.idBot}", 
+                        idMessenger: "${params.idMessenger}", 
+                        idEventType: "${params.idEventType}", 
+                        idTargetSystem: "${params.idTargetSystem}", 
+                        idUser: "${params.idUser}", 
+                        status: 0
+                    }}) {
+                        clientMutationId
+                    }
+                }
+            `)
+            return result
+        } catch (e) {
+            logger.error(`incomRequestService.add: ${e}`)
+        }
+    }
+
+
 }
 
 module.exports = new IncomRequestService();

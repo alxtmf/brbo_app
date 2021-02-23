@@ -20,6 +20,8 @@ class UsersService {
                                         uuid
                                         code
                                         name
+                                        settings
+                                        idMessenger
                                     }
                                 }
                             }

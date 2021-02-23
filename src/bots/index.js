@@ -24,13 +24,13 @@ module.exports.createBotList = function(public_url) {
                             client.bot = new TelegramClient({
                                 accessToken: JSON.parse(bot.settings).access_token,
                             });
-                            path = '/webhooks/telegram'
+                            path = '/webhooks/telegram' + client.code
                             break;
                         case 'VIBER':
                             client.bot = new ViberClient({
                                 accessToken: JSON.parse(bot.settings).access_token,
                             });
-                            path = '/webhooks/viber'
+                            path = '/webhooks/viber' + client.code
                     }
                     if (client.bot) {
                         client.bot.setWebhook(public_url + path)

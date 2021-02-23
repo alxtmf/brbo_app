@@ -167,42 +167,73 @@ class MessagesService {
         }
     }
 
+    async getMessengerUserMessageRoutesByBot(idUser, idEventType, idBot){
+        try {
+            let data = await graphQLClient.request(gql`
+                {
+                    allVMessengerUserMessageRoutes(condition: {
+                        idUser: "${idUser}", 
+                        idEventType: "${idEventType}",
+                        idBot: "${idBot}"
+                    }) {
+                        nodes {                             
+                                idBot
+                                idUser
+                                idMessenger
+                                idEventType
+                                idTargetSystem
+                                idParentEventType
+                                outerId
+                                userSettings
+                                botName
+                                botSettings
+                                messengerCode
+                        }
+                    }
+                }
+            `)
+            return data.allVMessengerUserMessageRoutes.nodes
+        } catch (e) {
+            logger.error(`messageService.getMessengerUserMessageRoutesByBot():` + e)
+            return `messageService.getMessengerUserMessageRoutesByBot():` + e
+        }
+    }
+
     async getUserKeyboardData(idUser, idBot, idParentEventTypeCode){
         try {
-            const idEvent = await EventTypeService.findEventTypeByCodeAndType(idParentEventTypeCode, 1)
-
-            //const gquery = idEvent.allClsEventTypes.nodes.length == 0 ?
-            const gquery = (idParentEventTypeCode == null ?
-                gql`
-                {
-                    allVMessengerUserMessageRoutes(
-                        condition: {idBot: "${idBot}", idUser: "${idUser}", typeEvent: 1 },
-                        filter: {idParentEventType: {isNull: true}}
-                    ) {
-                        nodes {
-                            idEventType
+            let gquery;
+            if(idParentEventTypeCode == null){
+                gquery = gql`
+                    {
+                        allVMessengerUserMessageRoutes(
+                            condition: {idBot: "${idBot}", idUser: "${idUser}", typeEvent: 1 },
+                            filter: {idParentEventType: {isNull: true}}
+                        ) {
+                            nodes {
+                                idEventType
+                            }
                         }
                     }
-                }
-            `
-            :
-            gql`
-                {
-                    allVMessengerUserMessageRoutes(
-                        condition: {idBot: "${idBot}", idUser: "${idUser}", idParentEventType: "${idEvent[0].uuid}", typeEvent: 1 }
-                    ) {
-                        nodes {
-                            idEventType
+                `
+            } else {
+                const idEvent = await EventTypeService.findEventTypeByCodeAndType(idParentEventTypeCode, 1)
+                gquery = gql`
+                    {
+                        allVMessengerUserMessageRoutes(
+                            condition: {idBot: "${idBot}", idUser: "${idUser}", idParentEventType: "${idEvent[0].uuid}", typeEvent: 1 }
+                        ) {
+                            nodes {
+                                idEventType
+                            }
                         }
                     }
-                }
-            `
-            )
+                `
+            }
 
             let data = await graphQLClient.request(gquery);
 
             if(data.allVMessengerUserMessageRoutes.nodes[0]) {
-                const data = graphQLClient.request(gql`
+                const result = await graphQLClient.request(gql`
                     {
                         allClsEventTypes(condition: {uuid: "${data.allVMessengerUserMessageRoutes.nodes[0].idEventType}"}) {
                             nodes {
@@ -212,7 +243,7 @@ class MessagesService {
                         }
                     }
                 `);
-                return data.allClsEventTypes.nodes
+                return result.allClsEventTypes.nodes
             } else {
                 return null
             }

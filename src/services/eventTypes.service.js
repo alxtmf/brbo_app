@@ -15,6 +15,7 @@ class EventTypesService {
                         allClsEventTypes(condition: {code: "${code}", type: ${typ}, isDeleted: false}) {
                             nodes {
                                 uuid
+                                idTargetSystem
                             }
                         }
                     }
@@ -25,6 +26,7 @@ class EventTypesService {
                         allClsEventTypes(condition: {code: "${code}", isDeleted: false}) {
                             nodes {
                                 uuid
+                                idTargetSystem
                             }
                         }
                     }
