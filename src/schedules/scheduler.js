@@ -60,8 +60,13 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
                         switch (item.messengerCode) {
                             case "TELEGRAM":
                                 let tgmBotRecord = botList.get(item.idBot)
-                                tgmBotRecord.bot.sendMessage(item.outerId, node.text)
-                                    .catch(() => error_sending = true)
+
+                                // if (node.attachedFile){
+                                //     tgmBotRecord.bot.sendDocument(item.outerId, node.attachedFile)
+                                // } else {
+                                    tgmBotRecord.bot.sendMessage(item.outerId, node.text)
+                                        .catch(() => error_sending = true)
+                                // }
                                 break;
 
                             case "VIBER":
