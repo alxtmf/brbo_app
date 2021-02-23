@@ -19,6 +19,10 @@ class MessagesService {
                                 text: "${message.text}",
                                 idUser: "${message.idUser}",
                                 status: 0,
+                                attachedFile: "${message.attached_file}",
+                                attachedFileType: "${message.attached_file_type}",
+                                attachedFileSize: ${message.attached_file_size},
+                                attachedFileHash: "${message.attached_file_hash}"
                                 dateCreate: "${new Date().toISOString()}"}}) {
                                 clientMutationId
                             }
@@ -30,7 +34,7 @@ class MessagesService {
             )
             .catch(reason => {
                 logger.error(`messageService.addMessage(): ` + reason)
-                return reject(false)
+                return reject(`messageService.addMessage(): ` + reason)
             })
         })
     }

@@ -36,6 +36,15 @@ class MessageController {
                         }
                     }
 
+                    if (message.attached_file){
+                         // save to filesystem
+                    } else {
+                        message.attached_file = null
+                        message.attached_file_type = null
+                        message.attached_file_size = null
+                        message.attached_file_hash = null
+                    }
+
                     return await MessageService.addMessage(message)
                 }
             } catch (e) {
