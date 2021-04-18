@@ -1,4 +1,4 @@
-const BotsService = require('../services/bots.service')
+const BotService = require('../services/bot.service')
 const { logger }= require('../log')
 const { TelegramClient } = require('messaging-api-telegram');
 const { ViberClient } = require('messaging-api-viber');
@@ -8,8 +8,12 @@ const { botList } = require('./botlist')
 
 module.exports.createBotList = function(public_url) {
     return new Promise((resolve, reject) => {
-        BotsService.findAll()
+        BotService.findAll()
             .then(bots => {
+                if(bots.size == 0){
+                    reject('error get bot list')
+                }
+
                 bots.forEach(bot => {
                     let client = {
                         id: bot.uuid,
@@ -21,15 +25,15 @@ module.exports.createBotList = function(public_url) {
 
                     const settings = JSON.parse(bot.settings)
                     const path = settings.path
-                    switch (bot.clsMessengerByIdMessenger.code) {
+                    switch (bot.clsMessengerByIdMessenger.code.toUpperCase()) {
                         case 'TELEGRAM':
                             client.bot = new TelegramClient({
-                                accessToken: settings.access_token,
+                                accessToken: settings.accessToken,
                             });
                             break;
                         case 'VIBER':
                             client.bot = new ViberClient({
-                                accessToken: settings.access_token,
+                                accessToken: settings.accessToken,
                                 sender: settings.sender
                             });
                     }

@@ -54,7 +54,7 @@ class MessagesService {
                             }
                     `
                 )
-                return data.deleteNoSentMessages.bigInt
+                return data.deleteNoSentMessages ? data.deleteNoSentMessages.bigInt : 0
             } else {
                 return 0
             }
@@ -160,6 +160,7 @@ class MessagesService {
                                 botName
                                 botSettings
                                 messengerCode
+                                botCode
                         }
                     }
                 }

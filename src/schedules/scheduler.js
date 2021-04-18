@@ -3,10 +3,11 @@ const MessagesService = require('../services/messages.service')
 const IncomRequestService = require('../services/incomRequest.service')
 const { logger }= require('../log')
 const { TIMEZONE, MSG_SENT_THRESHOLD, MSG_NO_SENT_THRESHOLD, REQ_SENT_THRESHOLD, REQ_NO_SENT_THRESHOLD, REQ_READ_THRESHOLD } = process.env
-const { botList } = require('../bots/botlist')
+//const { botList } = require('../bots/botlist')
+const { getClient } = require('bottender')
 
 //check delete sent messages every 1 day.
-module.exports.taskDeleteSentMessages = cron.schedule('* * */6 * *', function () {
+module.exports.taskDeleteSentMessages = cron.schedule('32 11 */1 * *', function () {
 
     // delete SENT MESSAGES
     MessagesService.deleteSentMessages({ threshold: MSG_SENT_THRESHOLD })
@@ -54,25 +55,29 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
 
                 try {
                     let userMsgRoute = await MessagesService.getMessengerUserMessageRoutes(node.idUser, node.idEventType)
-                    let error_sending = false
+                    let error_sending = 'sending error'
 
                     for (const item of userMsgRoute) {
-                        switch (item.messengerCode) {
+                        switch (item.messengerCode.toUpperCase()) {
                             case "TELEGRAM":
-                                let tgmBotRecord = botList.get(item.idBot)
+                                //let tgmBotRecord = botList.get(item.idBot)
+                                let tgmBotRecord = getClient(item.botCode)
 
                                 // if (node.attachedFile){
                                 //     tgmBotRecord.bot.sendDocument(item.outerId, node.attachedFile)
                                 // } else {
-                                    tgmBotRecord.bot.sendMessage(item.outerId, node.text)
-                                        .catch(() => error_sending = true)
+                                    tgmBotRecord.sendMessage(item.outerId, node.text)
+                                        .then(() => error_sending = '')
+                                        .catch((err) => error_sending = err)
                                 // }
                                 break;
 
                             case "VIBER":
-                                let viberBotRecord = botList.get(item.idBot)
-                                viberBotRecord.bot.sendText(item.outerId, node.text)
-                                    .catch(() => error_sending = true)
+                                // let viberBotRecord = botList.get(item.idBot)
+                                let viberBotRecord = getClient(item.botCode)
+                                viberBotRecord.sendText(item.outerId, node.text)
+                                    .then(() => error_sending = '')
+                                    .catch((err) => error_sending = err)
                                 break;
                         }
                     }
@@ -91,7 +96,7 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
                             message: {uuid: node.uuid},
                             status: 3
                         });
-                        logger.error('Error: send message')
+                        logger.error('Error: [send message]: ' + error_sending)
                     }
 
                 } catch (err) {
@@ -99,7 +104,7 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
                         message: {uuid: node.uuid},
                         status: 2
                     });
-                    logger.error(err);
+                    logger.error('Error: [send message]: ' + err)
                 }
             })
         })

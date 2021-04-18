@@ -37,7 +37,7 @@ async function ShowKeyboard(context) {
                 data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes
                     .forEach(item => {
                         let settings = JSON.parse(item.settings)
-                        if(settings.access_token == botToken){
+                        if(settings.accessToken == botToken){
                             bot = item
                         }
                     })
@@ -96,7 +96,7 @@ async function AnswerKeyboard(context) {
                     data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes
                         .forEach(item => {
                             let settings = JSON.parse(item.settings)
-                            if (settings.access_token == botToken) {
+                            if (settings.accessToken == botToken) {
                                 bot = item
                             }
                         })
