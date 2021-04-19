@@ -1,11 +1,12 @@
+/*
 const BotService = require('../services/bot.service')
 const { logger }= require('../log')
 const { TelegramClient } = require('messaging-api-telegram');
 const { ViberClient } = require('messaging-api-viber');
 const { botList } = require('./botlist')
-
+*/
 // ************************************* CREATE BOT LIST ************************************************************
-
+/*
 module.exports.createBotList = function(public_url) {
     return new Promise((resolve, reject) => {
         BotService.findAll()
@@ -54,6 +55,7 @@ module.exports.createBotList = function(public_url) {
             })
     })
 }
+*/
 
 
 //  ******************************************* KEYBOARD **********************************************************

@@ -8,38 +8,33 @@ const graphQLClient = new GraphQLClient(endpoint)
 
 class MessagesService {
 
-    addMessage(message){
-        return new Promise(async (resolve, reject) => {
-            await graphQLClient.request(gql`
-                        mutation {
-                            __typename
-                            createRegSentMessage(input: {regSentMessage: {
-                                idEventType: "${message.idEventType}",
-                                idTargetSystem: "${message.idTargetSystem}",
-                                text: "${message.text}",
-                                idUser: "${message.idUser}",
-                                status: 0,
-                                attachedFile: "${message.attached_file}",
-                                attachedFileType: "${message.attached_file_type}",
-                                attachedFileSize: ${message.attached_file_size},
-                                attachedFileHash: "${message.attached_file_hash}"
-                                dateCreate: "${new Date().toISOString()}"}}) {
-                                clientMutationId
-                            }
-                        }
-                `
-            ).then(value =>
-            //TODO надо чтоб из БД вовращалась полная запись и сделать return data
-                { return resolve(message) }
+    async addMessage(message){
+        try{
+            const data = await graphQLClient.request(gql`
+                mutation {
+                    __typename
+                    createRegSentMessage(input: {regSentMessage: {
+                        idEventType: "${message.idEventType}",
+                        idTargetSystem: "${message.idTargetSystem}",
+                        text: "${message.text}",
+                        idUser: "${message.idUser}",
+                        status: 0,
+                        attachedFile: "${message.attached_file}",
+                        attachedFileType: "${message.attached_file_type}",
+                        attachedFileSize: ${message.attached_file_size},
+                        attachedFileHash: "${message.attached_file_hash}"
+                        dateCreate: "${new Date().toISOString()}"}}) {
+                        clientMutationId
+                    }
+                }
+            `
             )
-            .catch(reason => {
-                logger.error(`messageService.addMessage(): ` + reason)
-                return reject(`messageService.addMessage(): ` + reason)
-            })
-        })
+            return data.error || 1
+        }catch(reason) {
+            logger.error(`messageService.addMessage(): ` + reason)
+            return 0
+        }
     }
-
-    // updateMessage(){  }
 
     async deleteNoSentMessages(params){
         try {
@@ -267,7 +262,8 @@ class MessagesService {
                                 __typename
                                 updateRegSentMessageByUuid(input: {
                                     regSentMessagePatch: { status: ${params.status}},
-                                    uuid: "${params.message.uuid}"}) {
+                                    uuid: "${params.message.uuid}"}) 
+                                {
                                     clientMutationId
                                 }
                             }

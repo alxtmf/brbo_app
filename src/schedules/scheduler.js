@@ -60,24 +60,32 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
                     for (const item of userMsgRoute) {
                         switch (item.messengerCode.toUpperCase()) {
                             case "TELEGRAM":
-                                //let tgmBotRecord = botList.get(item.idBot)
                                 let tgmBotRecord = getClient(item.botCode)
 
                                 // if (node.attachedFile){
                                 //     tgmBotRecord.bot.sendDocument(item.outerId, node.attachedFile)
                                 // } else {
-                                    tgmBotRecord.sendMessage(item.outerId, node.text)
-                                        .then(() => error_sending = '')
-                                        .catch((err) => error_sending = err)
+                                try {
+                                    await tgmBotRecord.sendMessage(item.outerId, node.text)
+                                    error_sending = ''
+                                    logger.info(`send to telegram - success`)
+                                } catch (e) {
+                                    logger.error('[sendMessage]: ' + e)
+                                    error_sending = 'error sending via telegram client'
+                                }
                                 // }
                                 break;
 
                             case "VIBER":
-                                // let viberBotRecord = botList.get(item.idBot)
                                 let viberBotRecord = getClient(item.botCode)
-                                viberBotRecord.sendText(item.outerId, node.text)
-                                    .then(() => error_sending = '')
-                                    .catch((err) => error_sending = err)
+                                try {
+                                    await viberBotRecord.sendText(item.outerId, node.text)
+                                    error_sending = ''
+                                    logger.info(`send to viber - success`)
+                                } catch (e) {
+                                    logger.error('[sendMessage]: ' + e)
+                                    error_sending = 'error sending via viber client'
+                                }
                                 break;
                         }
                     }
@@ -90,13 +98,14 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
                         if(node.idIncomRequest && node.idIncomRequest != 0) {
                             await IncomRequestService.setIncomRequestStatus(node.idIncomRequest, 3)
                         }
-                        logger.info(`sent message successfuly`)
+                        logger.info(`set status 'sent'`)
                     } else {
                         await MessagesService.setMessageStatus({
                             message: {uuid: node.uuid},
                             status: 3
                         });
-                        logger.error('Error: [send message]: ' + error_sending)
+                        logger.error('[sendMessage]: ' + error_sending)
+                        logger.info(`set status '3 - error send'`)
                     }
 
                 } catch (err) {
@@ -104,7 +113,8 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
                         message: {uuid: node.uuid},
                         status: 2
                     });
-                    logger.error('Error: [send message]: ' + err)
+                    logger.error('[sendMessage]: ' + err)
+                    logger.info(`set status '2 - error send'`)
                 }
             })
         })

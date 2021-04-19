@@ -18,43 +18,50 @@ class MessageController {
         const messages = req.body.messages
 
         const promises = messages.map(async (message) => {
-            try {
-                let data = await MessageService.findEventTypeByMessage(message)
-                if (!data || data[0].uuid == "" || data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0) {
-                    throw `not found route | not found eventTypes | user not found`
-                } else {
-                    message.idEventType = data[0].uuid
-                    message.idTargetSystem = data[0].idTargetSystem
-                    message.idUser = data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges[0].node.idUser
-
-                    if (message.id_incom_request) {
-                        const isUpdated = await IncomRequestService.setIncomRequestStatus(message.id_incom_request, 2)
-                        if(isUpdated){
-                            logger.info('message.id_incom_request (' + message.id_incom_request + ') status is set=2')
-                        } else {
-                            logger.error('message.id_incom_request (' + message.id_incom_request + ') error set status')
-                        }
-                    }
-
-                    if (message.attached_file){
-                         // save to filesystem
+            return new Promise(async (resolve, reject) => {
+                try {
+                    let resMessage = message
+                    let data = await MessageService.findEventTypeByMessage(message)
+                    if (data.length == 0 || data[0].uuid == "" || data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges.length == 0) {
+                        resMessage.status = `not found route/eventTypes/user`
+                        return resolve(resMessage)
                     } else {
-                        message.attached_file = null
-                        message.attached_file_type = null
-                        message.attached_file_size = null
-                        message.attached_file_hash = null
-                    }
+                        message.idEventType = data[0].uuid
+                        message.idTargetSystem = data[0].idTargetSystem
+                        message.idUser = data[0].clsTargetSystemByIdTargetSystem.regTargetSystemUsersByIdTargetSystem.edges[0].node.idUser
 
-                    return await MessageService.addMessage(message)
+                        if (message.id_incom_request) {
+                            const isUpdated = await IncomRequestService.setIncomRequestStatus(message.id_incom_request, 2)
+                            if(isUpdated){
+                                logger.info('message.id_incom_request (' + message.id_incom_request + ') status is set=2')
+                            } else {
+                                logger.error('message.id_incom_request (' + message.id_incom_request + ') error set status')
+                            }
+                        }
+
+                        if (message.attached_file){
+                             // save to filesystem
+                        } else {
+                            message.attached_file = null
+                            message.attached_file_type = null
+                            message.attached_file_size = null
+                            message.attached_file_hash = null
+                        }
+
+                        const result = await MessageService.addMessage(message)
+                        resMessage.status = result ? 'created' : 'error create'
+                    }
+                    return resolve(resMessage)
+                } catch (e) {
+                    logger.error(`createMessage error: ${e}`)
+                    reject(`createMessage error: ${e}`)
                 }
-            } catch (e) {
-                logger.error(`createMessage error: ${e}`)
-                throw `createMessage error: ${e}`
-            }
+            })
         })
 
         Promise.allSettled(promises).then((result) => {
-            res.send(result)
+            const messages = result.map(v => v.status == 'fulfilled' ? v.value : Object.assign({}, {status: v.reason}) )
+            res.send(messages)
         })
     }
 }

@@ -1,7 +1,7 @@
 const winston = require('winston')
 const logformat = winston.format.combine(
-    winston.format.json(),
-    winston.format.colorize(),
+    winston.format.simple(),
+    // winston.format.colorize(),
     winston.format.timestamp(),
     winston.format.align(),
     winston.format.timestamp({
@@ -20,18 +20,18 @@ module.exports.logger = winston.createLogger({
             new winston.transports.File({
                 filename: errorLogFilename,
                 level: 'error',
-                format: winston.format.json()
+                format: logformat
             }),
             new winston.transports.File({
                 filename: infoLogFilename,
                 level: 'info',
-                format: winston.format.json()
+                format: logformat
             }),
             new winston.transports.Console({
                 level: 'info',
                 format: winston.format.combine(
                     winston.format.colorize(),
-                    winston.format.simple()
+                    logformat
                 )
             })
         ],

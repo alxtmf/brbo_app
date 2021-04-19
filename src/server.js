@@ -40,7 +40,7 @@ ngrok.connect({
     addr: PORT,
 })
     .then(url => {
-        logger.info('Tunnel Created -> ', url);
+        logger.info('Tunnel Created -> ' + url);
         logger.info('Tunnel Inspector ->  http://127.0.0.1:4040');
 
         server.listen(PORT, err => {
@@ -87,8 +87,8 @@ ngrok.connect({
                                 }
 
                                 client.setWebhook(url + value['path'])
-                                    .then(() => logger.info('set webhook success'))
-                                    .catch((err)=> logger.info(`set webhook - error: ${err}`))
+                                    .then(() => logger.info(`${value['path']} - set webhook success`))
+                                    .catch((err)=> logger.info(`${value['path']} - set webhook error: ${err}`))
 
                             }
 

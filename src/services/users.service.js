@@ -40,6 +40,81 @@ class UsersService {
             return false
         }
     }
+
+
+    async findRegTargetSystemUser(targetSystemId, login){
+        try {
+            let data = await graphQLClient.request(gql`
+                {
+                    allRegTargetSystemUsers(condition: {idTargetSystem: "${targetSystemId}", login: "${login}", isDeleted: false}) {
+                        nodes {
+                            uuid
+                        }
+                    }
+                }
+            `)
+            return data.allRegTargetSystemUsers.nodes
+        } catch (e) {
+            logger.error(`UsersService.findRegTargetSystemUser(${targetSystemId}, ${login}) - ` + e)
+            return false
+        }
+    }
+
+    async createRegTargetSystemUser(targetSystemId, user){
+        try {
+            let data = await graphQLClient.request(gql`
+                mutation {
+                    __typename
+                    createRegTargetSystemUser(input: {
+                        regTargetSystemUser: {
+                            idTargetSystem: "${targetSystemId}",
+                            login: "${user.login}",
+                            outerId: "${user.login}",
+                            firstname: "${user.firstname || ''}",
+                            lastname: "${user.lastname || ''}",
+                            patronymic: "${user.patronymic || ''}",
+                            email: "${user.email || ''}"
+                            isDeleted: false
+                        }
+                    }) {
+                        clientMutationId
+                    }
+                }
+            `)
+            return data.error || 1
+        } catch (e) {
+            logger.error(`UsersService.createRegTargetSystemUser(${targetSystemId}, ${user.login}) - ` + e)
+            return 0
+        }
+    }
+
+    async updateRegTargetSystemUser(targetSystemUserId, user){
+        try {
+            let data = await graphQLClient.request(gql`
+                mutation {
+                    __typename
+                    updateRegTargetSystemUserByUuid(input: {
+                        regTargetSystemUserPatch: {
+                            firstname: "${user.firstname || ''}",
+                            lastname: "${user.lastname || ''}",
+                            patronymic: "${user.patronymic || ''}",
+                            email: "${user.email || ''}",
+                            isDeleted: ${user.is_deleted || false}
+                        },
+                        uuid: "${targetSystemUserId}" 
+                    }) {
+                        clientMutationId
+                    }
+                }
+            `)
+            return data.error || 1
+        } catch (e) {
+            logger.error(`UsersService.updateRegTargetSystemUser(${targetSystemUserId}, ${user.login}) - ` + e)
+            return 0
+        }
+    }
+
+
 }
 
 module.exports = new UsersService();
