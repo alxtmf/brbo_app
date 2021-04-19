@@ -128,6 +128,18 @@ async function AnswerKeyboard(context) {
 }
 
 
+async function ActivateTgUser(context){
+    if(context.event.isMessage) {
+        const user = context.event.message.from
+        const ident = context.event.message.text.replace('/register', '').trim()
+        if(ident) {
+            logger.info('register telegram client id:' + user.id + ', username: ' + user.username + ', identificator: ' + ident);
+            await context.sendText(`Hi, ${user.firstName}! You are send ident: ${ident}`);
+        } else {
+            await context.sendText(`Hi, ${user.firstName}! You are send empty ident`);
+        }
+    }
+}
 
 
 async function TelegramDefaultAction(context) {
@@ -149,6 +161,7 @@ async function ViberDefaultAction(context) {
 async function TelegramActions(context){
     return router([
         text('/start', ShowKeyboard),
+        text(/\/register (.+)/, ActivateTgUser),
         telegram.callbackQuery(AnswerKeyboard),
         telegram.any(TelegramDefaultAction),
     ]);
