@@ -16,6 +16,7 @@
     "child_process": "^1.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "form-data": "^4.0.0",
     "graphql": "^14.0.2",
     "graphql-request": "^3.0.0",
     "messaging-api-telegram": "^1.0.1",

@@ -29,54 +29,42 @@ async function ShowKeyboard(context) {
     const userId = context._session.user.id
     const botToken = context._client._token
 
-    await UsersService.findAll(userId)
-        .then(async (data) => {
-            if(userId && data.length) {
-                //find bot by accessToken
-                let bot = {}
-                data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes
-                    .forEach(item => {
-                        let settings = JSON.parse(item.settings)
-                        if(settings.accessToken == botToken){
-                            bot = item
-                        }
-                    })
+    try{
+        const check = await UsersService.checkAuthUser(userId, botToken)
 
-                // if(!bot) throw 'bot not found'
-
-                MessagesService.getUserKeyboardData(
-                    data[0].clsUserByIdUser.uuid,
-                    bot.uuid,
-                    //data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes,
-                    null
-                ).then(async (result) => {
-                    //build and return keyboard
-                    if(result) {
-                        if (result.length) {
-                            if (context.platform === 'telegram') {
-                                await context.sendText('please click an option',
-                                    {replyMarkup: buildTelegramKeyboard(result)}
-                                )
-                            }
-                            if (context.platform === 'viber') {
-                                // await context.sendText('please click an option',
-                                //     {replyMarkup: buildViberKeyboard(data.allClsEventTypes.nodes)}
-                                // )
-                            }
-                        } else {
-                            await context.sendText(`It is Your final choice is null`);
-                        }
-                    } else {
-                        await context.sendText('You are not authorized')
+        if(check) {
+            const keyboard = await MessagesService.getUserKeyboardData(
+                        check.clsUser.uuid,
+                        check.bot.uuid,
+                        //data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes,
+                        null
+                    )
+            //build and return keyboard
+            if (keyboard) {
+                if (keyboard.length) {
+                    if (context.platform === 'telegram') {
+                        await context.sendText('Пожалуйста, выберите запрос',
+                            {replyMarkup: buildTelegramKeyboard(keyboard)}
+                        )
                     }
-                })
+                    if (context.platform === 'viber') {
+                        // await context.sendText('please click an option',
+                        //     {replyMarkup: buildViberKeyboard(data.allClsEventTypes.nodes)}
+                        // )
+                    }
+                } else {
+                    await context.sendText(`It is Your final choice is null`);
+                }
             } else {
-                await context.sendText('You are not authorized')
+                await context.sendText('Для вас не установлены запросы')
             }
-        })
-        .catch(async (err)=> {
-            await context.sendText('You are not authorized')
-        })
+        } else {
+            await context.sendText(getNoAuthText())
+        }
+    } catch(e) {
+        logger.error(`[ShowKeyboard]: ${e}`)
+        await context.sendText('Упс. Похоже, что сервис пока недоступен. Попробуйте позже или обратитесь к администратору.')
+    }
 }
 
 async function AnswerKeyboard(context) {
@@ -123,7 +111,7 @@ async function AnswerKeyboard(context) {
                 }
             })
     } catch(err) {
-        await context.sendText('You are not authorized')
+        await context.sendText(getNoAuthText())
     }
 }
 
@@ -132,21 +120,51 @@ async function ActivateTgUser(context){
     if(context.event.isMessage) {
         const user = context.event.message.from
         const ident = context.event.message.text.replace('/register', '').trim()
+        const botToken = context._client._token
+
         if(ident) {
-            logger.info('register telegram client id:' + user.id + ', username: ' + user.username + ', identificator: ' + ident);
-            await context.sendText(`Hi, ${user.firstName}! You are send ident: ${ident}`);
+            const check = await UsersService.checkAuthUser(user.id, botToken)
+
+            if(!check) {
+                logger.info('register telegram client id:' + user.id + ', username: ' + user.username + ', identificator: ' + ident);
+                const result = await UsersService.activateUser(user, botToken, ident)
+                if(result){
+                    await context.sendText(`Поздравляем, ${user.firstName}! Ваш профиль активирован.`);
+                } else {
+                    await context.sendText(`Попробуйте позже`);
+                }
+            } else {
+                await context.sendText(`Привет, ${user.firstName}! Вы уже зарегистрированы в системе`);
+            }
+
         } else {
-            await context.sendText(`Hi, ${user.firstName}! You are send empty ident`);
+            await context.sendText(`Пустое значение идентификатора`);
         }
     }
 }
 
+function getNoAuthText(){
+    return "Похоже, что Вы не зарегистрированы. Пожалуйста, свяжитесь в администратором.\n" +
+        "Если знаете свой идентификатор - отправьте сообщение \"/register <идентификатор>\" для активации профиля."
+}
 
 async function TelegramDefaultAction(context) {
     if(context.event.isMessage) {
         const user = context.event.message.from
+        const botToken = context._client._token
+
         logger.info('telegram client id:' + user.id + ', username: ' + user.username);
-        await context.sendText(`Hi, ${user.firstName}! You are send message: ${context.event.message.text}`);
+        //1. проверить регистрацию
+        const check = await UsersService.checkAuthUser(user.id, botToken)
+
+        if(!check) {
+            //2. если нет регистрации - сообщение "Похоже, что Вы не зарегистрированы. Пожалуйста, свяжитесь в администратором.
+            // Если знаете свой код доступа - отправьте сообщение "/register <код доступа>" для активации аккаунта."
+            await context.sendText(getNoAuthText())
+        } else {
+            //3. если регистрация есть - приветственное сообщение
+            await context.sendText(`Привет, ${user.firstName}! Вы написали: ${context.event.message.text}`);
+        }
     }
 }
 

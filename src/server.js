@@ -7,7 +7,6 @@ const routes = require('./routes/index')
 const { logger }= require('./log')
 const ngrok = require('ngrok')
 const { PORT, NODE_ENV } = process.env
-const { createBotList } = require('./bots')
 const { bottender } = require('bottender')
 const { taskSentMessages, taskDeleteSentMessages } = require('./schedules/scheduler')
 const BotService = require('./services/bot.service')
@@ -16,15 +15,15 @@ const { ViberClient } = require('messaging-api-viber')
 
 const server = express()
 
-const verify = (req, _, buf) => {
-    req.rawBody = buf.toString();
-};
-
 const Bottender = bottender({
     dev: process.env.NODE_ENV !== 'production',
 });
 
 const handle = Bottender.getRequestHandler();
+
+const verify = (req, _, buf) => {
+    req.rawBody = buf.toString();
+};
 
 server.use(bodyParser.json({verify}));
 server.use(bodyParser.urlencoded({extended: false, verify}));
@@ -94,20 +93,6 @@ ngrok.connect({
 
                             taskSentMessages.start()
                             taskDeleteSentMessages.start()
-
-/*
-                            createBotList(url)
-                                .then((botList) => {
-                                    logger.info('Count active bots: ' + botList.size)
-
-                                    taskSentMessages.start()
-                                    taskDeleteSentMessages.start()
-
-                                })
-                                .catch((err) => {
-                                    logger.error(err)
-                                })
-*/
 
                         })
                         .catch((err) => {

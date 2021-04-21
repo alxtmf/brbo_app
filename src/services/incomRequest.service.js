@@ -69,23 +69,21 @@ class IncomRequestService{
 
     async setIncomRequestStatus(idIncomRequest, statusIncomRequest) {
         try {
-            //if (await this.findIncomRequest(idIncomRequest)) {
-                const data = await graphQLClient.request(gql`
-                            mutation {
-                                __typename
-                                updateRegIncomRequestByUuid(input: {regIncomRequestPatch: {status: ${statusIncomRequest}}, uuid: "${idIncomRequest}"}) {
-                                    clientMutationId
-                                }
-                            }
-                    `
-                )
-                return data.error || true // Promise.resolve({error: '', data: data})
-//            } else {
-//                throw "not found incomRequest"
-//            }
+            const data = await graphQLClient.request(gql`
+                mutation {
+                    updateRegIncomRequestByUuid(input: {regIncomRequestPatch: {status: ${statusIncomRequest}}, uuid: "${idIncomRequest}"}) {
+                        regIncomRequest{
+                            uuid
+                            status
+                        }
+                    }
+                }
+                `
+            )
+            return data.setIncomRequestStatusAnswered.regIncomRequest || 0
         } catch (e) {
-            logger.error(`IncomRequestService.setIncomRequestStatus(): ` + e)
-            return false //Promise.reject({error: e, data: null})
+            logger.error(`IncomRequestService.setIncomRequestStatus(): ${e}`)
+            return 0
         }
     }
 
@@ -102,11 +100,13 @@ class IncomRequestService{
                         idUser: "${params.idUser}", 
                         status: 0
                     }}) {
-                        clientMutationId
+                        regIncomRequest{
+                            uuid
+                        }
                     }
                 }
             `)
-            return result
+            return result.regIncomRequest
         } catch (e) {
             logger.error(`incomRequestService.add: ${e}`)
         }

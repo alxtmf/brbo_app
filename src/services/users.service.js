@@ -1,5 +1,6 @@
 const {logger } = require("../log");
 const {GraphQLClient, gql} = require('graphql-request')
+const BotService = require('./bot.service')
 
 const endpoint = `http://localhost:${process.env.PORT}/graphql`
 const graphQLClient = new GraphQLClient(endpoint)
@@ -8,7 +9,7 @@ class UsersService {
 
     async findAll(outerId){
         try {
-            let data = await graphQLClient.request(gql`
+            const data = await graphQLClient.request(gql`
                 {
                     allRegMessengerUsers(condition: {outerId: "${outerId}", isDeleted: false}) {
                         nodes {
@@ -44,7 +45,7 @@ class UsersService {
 
     async findRegTargetSystemUser(targetSystemId, login){
         try {
-            let data = await graphQLClient.request(gql`
+            const data = await graphQLClient.request(gql`
                 {
                     allRegTargetSystemUsers(condition: {idTargetSystem: "${targetSystemId}", login: "${login}", isDeleted: false}) {
                         nodes {
@@ -62,7 +63,7 @@ class UsersService {
 
     async createRegTargetSystemUser(targetSystemId, user){
         try {
-            let data = await graphQLClient.request(gql`
+            const data = await graphQLClient.request(gql`
                 mutation {
                     __typename
                     createRegTargetSystemUser(input: {
@@ -114,7 +115,72 @@ class UsersService {
         }
     }
 
+    async checkAuthUser(userId, botToken){
+        try {
+            const data = await this.findAll(userId)
+            if (userId && data.length) {
+                //find bot by accessToken
+                const bot = data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes
+                    .filter(item => {
+                        const settings = JSON.parse(item.settings)
+                        return settings.accessToken == botToken
+                    })
+                if(bot) {
+                    return {clsUser: data[0].clsUserByIdUser, bot: bot[0]}
+                } else {
+                    return null
+                }
+            } else {
+                // save user.id in
+            }
+        } catch(e){
+            logger.error(`[checkAuthUser]: ${e}`)
+        }
+        return null
+    }
 
+    async activateUser(user, botToken, ident){
+        try {
+            const data = await graphQLClient.request(gql`
+                {
+                    allClsUsers(condition: {identificator: "${ident}", isDeleted: false}) {
+                        nodes {
+                            uuid
+                            code
+                            identificator
+                        }
+                    }
+                }
+            `)
+
+            if(data && data.allClsUsers.nodes.length){
+                // write to regMessengerUser
+                const bot = await BotService.findBot(botToken)
+
+                const regUser = await graphQLClient.request(gql`
+                    mutation {
+                        __typename
+                        createRegMessengerUser(input: {
+                            regMessengerUser: {
+                                outerId: "${user.id}",
+                                idMessenger: "${bot.clsMessengerByIdMessenger.uuid}",
+                                idUser: "${data.allClsUsers.nodes[0].uuid}",
+                                isDeleted: false
+                            }
+                        }) {
+                            clientMutationId
+                        }
+                    }
+                `)
+                return regUser || null
+            }
+            return null
+
+        } catch(e){
+            logger.error(`[activateUser]: ${e}`)
+            return null
+        }
+    }
 }
 
 module.exports = new UsersService();

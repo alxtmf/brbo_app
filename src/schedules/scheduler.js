@@ -2,9 +2,11 @@ const cron = require('node-cron')
 const MessagesService = require('../services/messages.service')
 const IncomRequestService = require('../services/incomRequest.service')
 const { logger }= require('../log')
-const { TIMEZONE, MSG_SENT_THRESHOLD, MSG_NO_SENT_THRESHOLD, REQ_SENT_THRESHOLD, REQ_NO_SENT_THRESHOLD, REQ_READ_THRESHOLD } = process.env
-//const { botList } = require('../bots/botlist')
+const { TIMEZONE, MSG_SENT_THRESHOLD, MSG_NO_SENT_THRESHOLD, REQ_SENT_THRESHOLD, REQ_NO_SENT_THRESHOLD, REQ_READ_THRESHOLD, ATTACH_UPLOAD_DIR } = process.env
+const fs = require('fs')
 const { getClient } = require('bottender')
+const FormData = require('form-data');
+const fetch = require('node-fetch')
 
 //check delete sent messages every 1 day.
 module.exports.taskDeleteSentMessages = cron.schedule('32 11 */1 * *', function () {
@@ -46,7 +48,7 @@ module.exports.taskDeleteSentMessages = cron.schedule('32 11 */1 * *', function 
 
 
 //send to bot every 30 sec.
-module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
+module.exports.taskSentMessages = cron.schedule('*/10 * * * * *', function () {
 
     MessagesService.getMessagesToSend("0, 2, 3")
         .then(message => {
@@ -60,20 +62,37 @@ module.exports.taskSentMessages = cron.schedule('*/30 * * * * *', function () {
                     for (const item of userMsgRoute) {
                         switch (item.messengerCode.toUpperCase()) {
                             case "TELEGRAM":
-                                let tgmBotRecord = getClient(item.botCode)
+                                const tgmBotRecord = getClient(item.botCode)
 
-                                // if (node.attachedFile){
-                                //     tgmBotRecord.bot.sendDocument(item.outerId, node.attachedFile)
-                                // } else {
                                 try {
                                     await tgmBotRecord.sendMessage(item.outerId, node.text)
+                                    if (node.attachedFile) {
+                                        const attachedFile = fs.readFileSync(ATTACH_UPLOAD_DIR + '/' + node.attachedFile)
+
+                                        let formData = new FormData();
+                                        formData.append('chat_id', item.outerId);
+                                        formData.append('document', attachedFile, node.attachedFile);
+
+                                        const settings = JSON.parse(item.botSettings)
+
+                                        await fetch('https://api.telegram.org/bot'+settings.accessToken+'/sendDocument',
+                                            { method: 'POST', body: formData })
+
+                                        fs.unlink(ATTACH_UPLOAD_DIR + '/' + node.attachedFile, (err) => {
+                                            if (err) {
+                                                console.error(err)
+                                                logger.error('error remove attach file ')
+                                                return
+                                            }
+                                            console.log('file is removed')
+                                        })
+                                    }
                                     error_sending = ''
                                     logger.info(`send to telegram - success`)
                                 } catch (e) {
                                     logger.error('[sendMessage]: ' + e)
                                     error_sending = 'error sending via telegram client'
                                 }
-                                // }
                                 break;
 
                             case "VIBER":

@@ -15,6 +15,7 @@ class BotService {
                             uuid
                             code
                             clsMessengerByIdMessenger {
+                                uuid
                                 code
                             }
                             name
@@ -24,10 +25,29 @@ class BotService {
                     }
                 }
             `)
-            return Promise.resolve(data.allClsBots.nodes)
+            return data.allClsBots.nodes
         } catch (e) {
-            logger.error(`BotsService.findAll() - ` + e)
-            return Promise.reject(`BotsService.findAll() - ` + e)
+            logger.error(`[BotsService.findAll()]: ` + e)
+            return null
+        }
+    }
+
+    async findBot(botToken){
+        try {
+            const bots = await this.findAll()
+            if(bots){
+                const bot = bots.filter(b => {
+                    const settings = JSON.parse(b.settings)
+                    return settings.accessToken == botToken
+                })
+                if(bot.length > 0){
+                    return bot[0]
+                }
+            }
+            return null
+        } catch (e) {
+            logger.error(`[BotsService.findBot(${botToken})]: ` + e)
+            return null
         }
     }
 
@@ -36,46 +56,15 @@ class BotService {
             let data = await this.findAll()
             let channels = {}
             data.forEach((bot, idx) => {
-                // channels[bot.clsMessengerByIdMessenger.code + '_' + idx] = JSON.parse(bot.settings)
-                // logger.info(bot.clsMessengerByIdMessenger.code + '_' + idx)
                 channels[bot.code] = JSON.parse(bot.settings)
                 logger.info(bot.code)
             })
-            //return Promise.resolve(channels)
-            return  channels
-        } catch (e) {
-            logger.error(`BotsService.getConfigChannels() - ` + e)
-            //return Promise.reject(`BotsService.getConfigChannels() - ` + e)
-            return null
-        }
-    }
-
-    async getConfigChannelsStr(){
-        try {
-            let data = await this.findAll()
-            let channels = '{'
-            data.forEach((bot, idx) => {
-                channels = channels + bot.clsMessengerByIdMessenger.code + '_' + idx + ': ' + bot.settings
-                if(idx != data.length - 1) {
-                    channels = channels + ','
-                }
-                logger.info(bot.clsMessengerByIdMessenger.code + '_' + idx)
-            })
-            channels = channels + '}'
-
-            channels = channels.replace(/"path"/g, 'path')
-            channels = channels.replace(/"enabled"/g, 'enabled')
-            channels = channels.replace(/"access_token"/g, 'access_token')
-            channels = channels.replace(/"sender"/g, 'sender')
-            channels = channels.replace(/"name"/g, 'name')
-
             return  channels
         } catch (e) {
             logger.error(`BotsService.getConfigChannels() - ` + e)
             return null
         }
     }
-
 }
 
 module.exports = new BotService();

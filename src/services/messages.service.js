@@ -44,12 +44,12 @@ class MessagesService {
                             mutation {
                                 __typename
                                 deleteNoSentMessages(input: { threshold: ${params.threshold} }){
-                                    bigInt
+                                    clientMutationId
                                 }
                             }
                     `
                 )
-                return data.deleteNoSentMessages ? data.deleteNoSentMessages.bigInt : 0
+                return data.deleteNoSentMessages.clientMutationId ? 1 : 0
             } else {
                 return 0
             }
