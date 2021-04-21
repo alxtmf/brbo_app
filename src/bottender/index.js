@@ -76,40 +76,28 @@ async function AnswerKeyboard(context) {
     const botToken = context._client._token
 
     try {
-        await UsersService.findAll(userId)
-            .then(async (data) => {
-                if (userId && data.length) {
-                    //find bot by accessToken
-                    let bot = {}
-                    data[0].clsMessengerByIdMessenger.clsBotsByIdMessenger.nodes
-                        .forEach(item => {
-                            let settings = JSON.parse(item.settings)
-                            if (settings.accessToken == botToken) {
-                                bot = item
-                            }
-                        })
+        const check = await UsersService.checkAuthUser(userId, botToken)
 
-                    if(bot){
-                        // find eventType
-                        const eventType = await EventTypeService.findEventTypeByCodeAndType(eventTypeCode, 1)
+        if(check) {
+            if(check.bot){
+                // find eventType
+                const eventType = await EventTypeService.findEventTypeByCodeAndType(eventTypeCode, 1)
 
-                        const result = await IncomRequestService.addIncomRequest({
-                            idBot: bot.uuid,
-                            idMessenger: bot.idMessenger,
-                            idEventType: eventType[0].uuid,
-                            idTargetSystem: eventType[0].idTargetSystem,
-                            idUser: data[0].clsUserByIdUser.uuid
-                        })
+                const result = await IncomRequestService.addIncomRequest({
+                    idBot: check.bot.uuid,
+                    idMessenger: check.bot.idMessenger,
+                    idEventType: eventType[0].uuid,
+                    idTargetSystem: eventType[0].idTargetSystem,
+                    idUser: check.clsUser.uuid
+                })
 
-                        if(result) {
-                            await context.sendText('Request send successfully')
-                        } else {
-                            await context.sendText('Error sending request')
-                        }
-
-                    }
+                if(result && result.regIncomRequest && result.regIncomRequest.uuid) {
+                    await context.sendText('Request send successfully')
+                } else {
+                    await context.sendText('Error sending request')
                 }
-            })
+            }
+        }
     } catch(err) {
         await context.sendText(getNoAuthText())
     }

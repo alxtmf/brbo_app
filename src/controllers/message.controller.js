@@ -19,6 +19,8 @@ class MessageController {
 
         const messages = req.body.messages
 
+        logger.info('received message array. Length: ' + messages.length)
+
         const promises = messages.map(async (message) => {
             return new Promise(async (resolve, reject) => {
                 try {

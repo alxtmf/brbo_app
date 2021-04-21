@@ -106,7 +106,7 @@ class IncomRequestService{
                     }
                 }
             `)
-            return result.regIncomRequest
+            return result.createRegIncomRequest
         } catch (e) {
             logger.error(`incomRequestService.add: ${e}`)
         }
